@@ -13,7 +13,9 @@ export const roboto: NextFont = Roboto({
   subsets: ['latin'],
 });
 
-export default [
+const fonts = [
   rubik,
   roboto,
 ];
+
+export default fonts;
