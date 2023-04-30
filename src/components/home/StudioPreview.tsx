@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 const StudioPreview = () => (
-  <Container sx={{ my: 5 }}>
+  <Container sx={{ my: 25 }}>
     <Typography variant="overline" color='blue.main'>Plan Your Purchases</Typography>
     <Typography variant="h2">
       Studio

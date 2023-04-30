@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import colors from '@/theme/colors';
 
 const LabsPreview = () => (
-  <Container sx={{ my: 5 }}>
+  <Container sx={{ my: 25 }}>
     <Typography variant="overline" color='purple.main'>Free and Open Source</Typography>
     <Typography variant="h2">
       Labs

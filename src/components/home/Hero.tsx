@@ -6,7 +6,7 @@ import HeroButtons from '@/components/home/HeroButtons';
 import colors from '@/theme/colors';
 
 const Hero = () => (
-  <Container sx={{ my: 5 }}>
+  <Container sx={{ my: 30 }}>
     <Typography variant="overline" color={colors.carnation}>Keyboards by Everyone</Typography>
     <Typography variant="h1">
       Introducing

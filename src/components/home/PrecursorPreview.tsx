@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography'
 
 const PrecursorPreview = () => (
-  <Container sx={{ my: 5 }}>
+  <Container sx={{ my: 25 }}>
     <Typography variant="h2">Tools for Community</Typography>
     <Typography variant="subtitle1" sx={{ my: 3 }}>
       These are the resources we have spent months developing.

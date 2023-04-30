@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import EditorFeatures from '@/components/home/EditorFeatures'
 
 const EditorPreview = () => (
-  <Container sx={{ my: 5 }}>
+  <Container sx={{ my: 25 }}>
     <Typography variant="overline" color='red.main'>New Keybits Format</Typography>
     <Typography variant="h2">
       Editor
