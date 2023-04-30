@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextLogo from '@/components/TextLogo';
+import HeroButtons from '@/components/home/HeroButtons';
 import colors from '@/theme/colors';
 
 const Hero = () => (
@@ -16,7 +16,7 @@ const Hero = () => (
     <Typography variant="subtitle1" sx={{ my: 4 }}>
       Revolutionizing design processes for custom keyboards.
     </Typography>
-    <Button variant="contained" color="black" sx={{ px: 5, py: 2 }}>Start Designing</Button>
+    <HeroButtons />
   </Container>
 );
 

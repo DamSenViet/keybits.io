@@ -23,6 +23,10 @@ const lightTheme = createTheme({
     black: {
       main: colors.blackRussian,
       contrastText: '#fff',
+    },
+    yellow: {
+      main: colors.supernova,
+      contrastText: '#fff',
     }
   },
   typography: {

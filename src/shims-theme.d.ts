@@ -6,6 +6,7 @@ declare module '@mui/material/styles' {
     blue: Palette['primary'];
     purple: Palette['primary'];
     black: Palette['primary'];
+    yellow: Palette['primary'];
   }
 
   interface PaletteOptions {
@@ -13,6 +14,7 @@ declare module '@mui/material/styles' {
     blue: PaletteOptions['primary'];
     purple: PaletteOptions['primary'];
     black: PaletteOptions['primary'];
+    yellow: PaletteOptions['primary'];
   }
 }
 
@@ -23,6 +25,7 @@ declare module '@mui/material/Button' {
     blue: true;
     purple: true;
     black: true;
+    yellow: true,
   }
 }
 
@@ -33,5 +36,6 @@ declare module '@mui/material/SvgIcon' {
     blue: true;
     purple: true;
     black: true;
+    yellow: true,
   }
 }
