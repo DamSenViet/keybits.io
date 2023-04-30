@@ -19,7 +19,7 @@ const LabsPreview = () => (
       Check out the libraries, tools, APIs, and documentation. Almost everything
       we make is open sourced and available via our GitHub repositories.
     </Typography>
-    <Button variant="outlined" color='purple' sx={{ px: 5, py: 1 }}>View Projects</Button>
+    <Button variant="outlined" color='purple' sx={{ px: 5, py: 2 }}>View Projects</Button>
   </Container>
 );
 

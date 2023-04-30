@@ -19,7 +19,7 @@ const StudioPreview = () => (
       makes choosing keyboard colors and keycap sets combinations simple and
       easy.
     </Typography>
-    <Button variant="outlined" color='blue' sx={{ px: 5, py: 1 }}>View Boards</Button>
+    <Button variant="outlined" color='blue' sx={{ px: 5, py: 2 }}>View Boards</Button>
   </Container>
 );
 
