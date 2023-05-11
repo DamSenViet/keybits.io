@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import SvgIcon from '@mui/material/SvgIcon';
 import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
@@ -61,15 +62,21 @@ function EditorFeature({
 
 export default function EditorFeatures() {
   return (
-    <Box>
+    <Grid
+      container
+      wrap="wrap"
+      // justifyItems=""
+      spacing={4}
+    >
       {features.map(feature => (
-        <EditorFeature
-          key={feature.name}
-          Icon={feature.icon}
-          name={feature.name}
-          description={feature.description}
-        />
+        <Grid key={feature.name} item sm={6}>
+          <EditorFeature
+            Icon={feature.icon}
+            name={feature.name}
+            description={feature.description}
+          />
+        </Grid>
       ))}
-    </Box>
+    </Grid>
   );
 };
