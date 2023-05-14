@@ -29,6 +29,18 @@ declare module '@mui/material/Button' {
   }
 }
 
+// Update the IconButton's color prop options
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides {
+    red: true;
+    blue: true;
+    purple: true;
+    black: true;
+    yellow: true,
+  }
+}
+
+
 // Update the SvgIcon's color prop options
 declare module '@mui/material/SvgIcon' {
   interface SvgIconPropsColorOverrides {

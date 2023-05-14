@@ -81,7 +81,10 @@ const lightTheme = createTheme({
       textTransform: 'none',
       fontSize: '1rem',
     },
-  },
+    allVariants: {
+      scrollMarginTop: 'calc(var(--MuiDocs-header-height) + 72px)',
+    },
+},
   shadows: Array(25).fill('none') as Shadows,
 });
 
