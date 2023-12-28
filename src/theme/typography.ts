@@ -1,5 +1,5 @@
 import { TypographyOptions } from '@mui/material/styles/createTypography';
-import { rubik, roboto } from '@/fonts';
+import { rubik, roboto } from './fonts';
 
 const typography = {
   fontFamily: roboto.style.fontFamily,
