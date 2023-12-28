@@ -1,5 +1,5 @@
-import { TypographyOptions } from '@mui/material/styles/createTypography';
-import { rubik, roboto } from './fonts';
+import { TypographyOptions } from '@mui/material/styles/createTypography'
+import { rubik, roboto } from './fonts'
 
 const typography = {
   fontFamily: roboto.style.fontFamily,
@@ -56,6 +56,6 @@ const typography = {
   allVariants: {
     scrollMarginTop: 'calc(var(--MuiDocs-header-height) + 72px)',
   },
-} satisfies TypographyOptions as TypographyOptions;
+} satisfies TypographyOptions as TypographyOptions
 
-export default typography;
+export default typography

@@ -1,24 +1,18 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Link from '@mui/material/Link';
-import routes from '@/routes';
+import * as React from 'react'
+import { styled } from '@mui/material/styles'
+import Link from '@mui/material/Link'
+import routes from '@/routes'
 
-const navLinks = [
-  routes.editor,
-  routes.studio,
-  routes.labs,
-];
+const navLinks = [routes.editor, routes.studio, routes.labs]
 
 const Ul = styled('ul')(() => ({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   display: 'flex',
-}));
+}))
 
-const Li = styled('li')(({ theme }) => ({
-  
-}));
+const Li = styled('li')(({ theme }) => ({}))
 
 const Nav = styled('nav')(({ theme }) => [
   {
@@ -51,7 +45,7 @@ const Nav = styled('nav')(({ theme }) => [
       },
     },
   },
-]);
+])
 
 /**
  * The header navigation as a horizontal list of elements.
@@ -69,5 +63,5 @@ export default function AppHeaderNavBar() {
         </Ul>
       </Nav>
     </>
-  );
-};
+  )
+}

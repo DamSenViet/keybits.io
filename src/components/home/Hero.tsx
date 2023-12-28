@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import TextLogo from '@/components/TextLogo';
-import HeroButtons from '@/components/home/HeroButtons';
-import colors from '@/theme/colors';
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import TextLogo from '@/components/TextLogo'
+import HeroButtons from '@/components/home/HeroButtons'
+import colors from '@/theme/colors'
 
 const Hero = () => (
   <Box>
@@ -24,12 +24,10 @@ const Hero = () => (
         wrap="nowrap"
         sx={{ height: '100%', mx: 'auto' }}
       >
-        <Grid
-          item
-          md={7}
-          lg={6}
-        >
-          <Typography variant="overline" color={colors.carnation}>Keyboards by Everyone</Typography>
+        <Grid item md={7} lg={6}>
+          <Typography variant="overline" color={colors.carnation}>
+            Keyboards by Everyone
+          </Typography>
           <Typography variant="h1">
             Introducing
             <br />
@@ -99,6 +97,6 @@ const Hero = () => (
       </Grid>
     </Container>
   </Box>
-);
+)
 
-export default Hero;
+export default Hero

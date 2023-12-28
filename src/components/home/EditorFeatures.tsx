@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import SvgIcon from '@mui/material/SvgIcon';
-import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
-import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter';
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import SvgIcon from '@mui/material/SvgIcon'
+import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined'
+import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined'
+import ViewInArIcon from '@mui/icons-material/ViewInAr'
+import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter'
 
 const features = [
   {
@@ -33,16 +33,16 @@ const features = [
     description:
       'Built-in collision detection prevents wasting time on impossible layouts when minimizing spaces on keys angled inwards.',
   },
-];
+]
 
 function EditorFeature({
   Icon,
   name,
   description,
 }: {
-  Icon: typeof SvgIcon;
-  name: string;
-  description: string;
+  Icon: typeof SvgIcon
+  name: string
+  description: string
 }) {
   return (
     <Box sx={{ my: 3 }}>
@@ -56,9 +56,8 @@ function EditorFeature({
         {description}
       </Typography>
     </Box>
-  );
-};
-
+  )
+}
 
 export default function EditorFeatures() {
   return (
@@ -68,7 +67,7 @@ export default function EditorFeatures() {
       // justifyItems=""
       spacing={4}
     >
-      {features.map(feature => (
+      {features.map((feature) => (
         <Grid key={feature.name} item sm={6}>
           <EditorFeature
             Icon={feature.icon}
@@ -78,5 +77,5 @@ export default function EditorFeatures() {
         </Grid>
       ))}
     </Grid>
-  );
-};
+  )
+}

@@ -1,67 +1,64 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import * as React from 'react'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
-import ClickAwayListener from '@mui/base/ClickAwayListener';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import SvgHamburgerMenu from '@/components/icons/SvgHamburgerMenu';
-import colors from '@/theme/colors';
-import routes from '@/routes';
+import ClickAwayListener from '@mui/base/ClickAwayListener'
+import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
+import SvgHamburgerMenu from '@/components/icons/SvgHamburgerMenu'
+import colors from '@/theme/colors'
+import routes from '@/routes'
 
-const navLinks = [
-  routes.editor,
-  routes.studio,
-  routes.labs,
-];
+const navLinks = [routes.editor, routes.studio, routes.labs]
 
-const Anchor = styled('a')<{ component?: React.ElementType; noLinkStyle?: boolean }>(
-  ({ theme }) => [
-    {
-      ...theme.typography.body2,
-      fontWeight: theme.typography.fontWeightBold,
-      textDecoration: 'none',
-      border: 'none',
-      width: '100%',
-      backgroundColor: 'transparent',
-      color: theme.palette.text.primary,
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(1),
-      borderRadius: theme.spacing(1),
-      transition: theme.transitions.create('background'),
-      '&:hover, &:focus-visible': {
-        color: theme.palette.background.default,
+const Anchor = styled('a')<{
+  component?: React.ElementType
+  noLinkStyle?: boolean
+}>(({ theme }) => [
+  {
+    ...theme.typography.body2,
+    fontWeight: theme.typography.fontWeightBold,
+    textDecoration: 'none',
+    border: 'none',
+    width: '100%',
+    backgroundColor: 'transparent',
+    color: theme.palette.text.primary,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1),
+    borderRadius: theme.spacing(1),
+    transition: theme.transitions.create('background'),
+    '&:hover, &:focus-visible': {
+      color: theme.palette.background.default,
+      backgroundColor: colors.hanPurple,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
         backgroundColor: colors.hanPurple,
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          backgroundColor: colors.hanPurple,
-        },
       },
     },
-  ],
-);
+  },
+])
 
 const Ul = styled('ul')({
   listStyleType: 'none',
   padding: 0,
   margin: 0,
-});
+})
 
 /**
  * The header navigation as a dropdown list of elements.
  */
 export default function AppHeaderNavDrop() {
-  const [open, setOpen] = React.useState(false);
-  const hambugerRef = React.useRef<HTMLButtonElement | null>(null);  
+  const [open, setOpen] = React.useState(false)
+  const hambugerRef = React.useRef<HTMLButtonElement | null>(null)
   return (
     <>
       <IconButton
-        size='small'
+        size="small"
         ref={hambugerRef}
         disableRipple
-        onClick={() => setOpen(value => !value)}
+        onClick={() => setOpen((value) => !value)}
         sx={{
           position: 'relative',
         }}
@@ -74,7 +71,7 @@ export default function AppHeaderNavDrop() {
             hambugerRef.current &&
             !hambugerRef.current.contains(event.target as HTMLElement)
           )
-            setOpen(false);
+            setOpen(false)
         }}
       >
         <Collapse
@@ -96,11 +93,9 @@ export default function AppHeaderNavDrop() {
             })}
           >
             <Ul>
-              {navLinks.map(navLink => (
+              {navLinks.map((navLink) => (
                 <li key={navLink.label}>
-                  <Anchor>
-                    {navLink.label}
-                  </Anchor>
+                  <Anchor>{navLink.label}</Anchor>
                 </li>
               ))}
             </Ul>
@@ -108,5 +103,5 @@ export default function AppHeaderNavDrop() {
         </Collapse>
       </ClickAwayListener>
     </>
-  );
-};
+  )
+}

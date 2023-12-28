@@ -15,6 +15,6 @@ const routes = {
     label: 'Labs',
     href: '/labs',
   },
-};
+}
 
-export default routes;
+export default routes
