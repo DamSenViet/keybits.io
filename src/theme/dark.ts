@@ -1,9 +1,9 @@
 import { Shadows, createTheme } from '@mui/material/styles';
 import colors from './colors';
 import typography from './typography';
-import { defaultLightTheme } from './base'
+import { defaultDarkTheme } from './base'
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     mode: 'light',
     text: {
@@ -31,7 +31,7 @@ const lightTheme = createTheme({
     }
   },
   typography,
-  shadows: defaultLightTheme.shadows.map(() => 'none') as Shadows,
+  shadows: defaultDarkTheme.shadows.map(() => 'none') as Shadows,
 });
 
-export default lightTheme;
+export default darkTheme;

@@ -2,19 +2,19 @@ import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Palette {
-    red: Palette['primary'];
-    blue: Palette['primary'];
-    purple: Palette['primary'];
-    black: Palette['primary'];
-    yellow: Palette['primary'];
+    red?: Palette['primary'];
+    blue?: Palette['primary'];
+    purple?: Palette['primary'];
+    black?: Palette['primary'];
+    yellow?: Palette['primary'];
   }
 
   interface PaletteOptions {
-    red: PaletteOptions['primary'];
-    blue: PaletteOptions['primary'];
-    purple: PaletteOptions['primary'];
-    black: PaletteOptions['primary'];
-    yellow: PaletteOptions['primary'];
+    red?: PaletteOptions['primary'];
+    blue?: PaletteOptions['primary'];
+    purple?: PaletteOptions['primary'];
+    black?: PaletteOptions['primary'];
+    yellow?: PaletteOptions['primary'];
   }
 }
 
