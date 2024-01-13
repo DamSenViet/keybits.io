@@ -1,21 +1,29 @@
-import * as React from 'react'
-import Head from 'next/head'
 import { AppProps } from 'next/app'
+import Head from 'next/head'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import lightTheme from '@/theme/light'
+import { Page } from 'page'
 import createEmotionCache from '@/utils/createEmotionCache'
+import DefaultLayout from '@/layouts/DefaultLayout'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 export interface MyAppProps extends AppProps {
+  Component: Page,
   emotionCache?: EmotionCache
 }
 
-export default function MyApp(props: MyAppProps) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+export default function MyApp({
+  emotionCache = clientSideEmotionCache,
+  Component,
+  pageProps,
+}: MyAppProps) {
+  const getLayout = Component.getLayout ?? ((page) => page)
+  const Layout = Component.layout ?? DefaultLayout
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -24,7 +32,9 @@ export default function MyApp(props: MyAppProps) {
       <ThemeProvider theme={lightTheme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <Layout>
+          {getLayout(<Component {...pageProps} />)}
+        </Layout>
       </ThemeProvider>
     </CacheProvider>
   )
