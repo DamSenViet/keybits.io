@@ -15,7 +15,7 @@ const Header = styled('header')(({ theme }) => [
     transition: theme.transitions.create('top'),
     zIndex: theme.zIndex.appBar,
     boxShadow: `inset 0px -1px 1px ${theme.palette.grey[300]}`,
-    backgroundColor: 'rgba(255,255,255)',
+    backgroundColor: theme.palette.background.default,
   },
   // theme.applyDarkStyles({
   //   boxShadow: `inset 0px -1px 1px ${(theme.vars || theme).palette.primaryDark[700]}`,
