@@ -1,12 +1,5 @@
 import * as React from 'react'
 import Head from 'next/head'
-import AppHeader from '@/components/header'
-import AppFooter from '@/components/footer/AppFooter'
-import Hero from '@/components/home/Hero'
-import PrecursorPreview from '@/components/home/PrecursorPreview'
-import EditorPreview from '@/components/home/EditorPreview'
-import StudioPreview from '@/components/home/StudioPreview'
-import LabsPreview from '@/components/home/LabsPreview'
 import routes from '@/routes'
 
 export default function Home() {
@@ -21,17 +14,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <AppHeader />
 
       <main>
-        <Hero />
-        <PrecursorPreview />
-        <EditorPreview />
-        <StudioPreview />
-        <LabsPreview />
       </main>
 
-      <AppFooter />
     </>
   )
 }
