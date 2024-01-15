@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   viewport: {
     initialScale: 1,
     width: 'device-width',
-  }
+  },
 }
 
 export default function RootLayout({
@@ -23,9 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

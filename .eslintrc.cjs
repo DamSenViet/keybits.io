@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es2020: true
+    es2020: true,
   },
   extends: [
     'eslint:recommended',
@@ -13,18 +13,18 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': 'warn',
-    "@typescript-eslint/no-unused-vars": [
-      "warn", // or "error"
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or "error"
       {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
     ],
-  }
+  },
 }
