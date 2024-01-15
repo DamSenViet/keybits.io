@@ -1,3 +1,5 @@
+'use client'
+
 import { SnackbarProvider } from 'notistack'
 
 export default class ConfiguredSnackbarProvider extends SnackbarProvider {
