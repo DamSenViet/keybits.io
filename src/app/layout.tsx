@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`bg-white dark:bg-black ${inter.className} min-h-[100dvh]`}
+        className={`bg-white dark:bg-black ${inter.className} min-h-[100dvh] flex flex-col`}
       >
         <Providers>{children}</Providers>
       </body>
