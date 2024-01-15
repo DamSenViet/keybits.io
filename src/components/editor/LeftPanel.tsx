@@ -1,9 +1,9 @@
-import { Input } from '../ui/input'
+import ExplorerView from './ExplorerView'
 
 export default function LeftPanel() {
   return (
-    <div className="min-w-28 p-4 border-r">
-      <Input placeholder="Search" />
+    <div className="min-w-64 p-4 border-r">
+      <ExplorerView />
     </div>
   )
 }
