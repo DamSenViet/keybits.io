@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import ThemeToggle from '@/components/ThemeModeToggle'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -112,6 +113,7 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+        <ThemeToggle />
       </div>
     </main>
   )

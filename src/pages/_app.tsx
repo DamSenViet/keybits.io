@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Page } from 'page'
+import Providers from '@/providers'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
@@ -21,7 +22,9 @@ export default function MyApp({
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      {getLayout(<Component {...pageProps} />)}
+      <Providers>
+        {getLayout(<Component {...pageProps} />)}
+      </Providers>
     </>
   )
 }
