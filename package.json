@@ -10,9 +10,15 @@
   },
   "dependencies": {
     "@mantine/hooks": "^7.4.1",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
     "date-fns": "^3.2.0",
     "framer-motion": "^10.18.0",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.309.0",
     "next": "^13.5.6",
     "next-compose-plugins": "^2.2.1",
     "next-seo": "^6.4.0",
@@ -22,7 +28,9 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.12.0",
     "react-use": "^17.4.2",
-    "sitemap": "^7.1.1"
+    "sitemap": "^7.1.1",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
