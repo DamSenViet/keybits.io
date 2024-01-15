@@ -8,9 +8,12 @@ import { useTheme } from 'next-themes'
 
 function ThemeModeToggle() {
   const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
 
-  const Icon = useMemo(() => (theme === 'light' ? Sun : Moon), [theme])
+  const Icon = useMemo(
+    () => (resolvedTheme === 'light' ? Sun : Moon),
+    [resolvedTheme]
+  )
   const icon = useMemo(
     () => (!mounted ? null : <Icon className="h-4 w-4" />),
     [mounted, Icon]
@@ -24,7 +27,7 @@ function ThemeModeToggle() {
     <Button
       variant={'outline'}
       onClick={() => {
-        setTheme(theme === 'light' ? 'dark' : 'light')
+        setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
       }}
     >
       {icon}
