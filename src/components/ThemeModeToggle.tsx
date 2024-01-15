@@ -1,20 +1,35 @@
 'use client'
 
+import { useState, useMemo } from 'react'
+import { useMount } from 'react-use'
+import { Button } from './ui/button'
+import { Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
-function ThemeToggle() {
+function ThemeModeToggle() {
+  const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
 
+  const Icon = useMemo(() => (theme === 'light' ? Sun : Moon), [theme])
+  const icon = useMemo(
+    () => (!mounted ? null : <Icon className="h-4 w-4" />),
+    [mounted, Icon]
+  )
+
+  useMount(() => {
+    setMounted(true)
+  })
+
   return (
-    <button
-      className="mt-16 px-4 py-2 text-white dark:text-black bg-black dark:bg-white font-semibold rounded-md"
+    <Button
+      variant={'outline'}
       onClick={() => {
         setTheme(theme === 'light' ? 'dark' : 'light')
       }}
     >
-      Change Theme
-    </button>
+      {icon}
+    </Button>
   )
 }
 
-export default ThemeToggle
+export default ThemeModeToggle
