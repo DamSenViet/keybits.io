@@ -1,9 +1,10 @@
-import ThemeToggle from '@/components/ThemeModeToggle'
+import AppHeader from '@/components/AppHeader'
 
 export default function Home() {
   return (
-    <main>
-      <ThemeToggle />
-    </main>
+    <>
+      <AppHeader />
+      <main></main>
+    </>
   )
 }
