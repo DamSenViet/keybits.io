@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from 'react'
 import { useMount } from 'react-use'
-import { Button } from './ui/button'
-import { Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { Sun, Moon } from 'lucide-react'
+import { Button } from './ui/button'
 
 function ThemeModeToggle() {
   const [mounted, setMounted] = useState(false)

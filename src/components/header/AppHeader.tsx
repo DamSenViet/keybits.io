@@ -1,7 +1,7 @@
 'use client'
 
-import Navigation from './Navigation'
 import ThemeModeToggle from '@/components/ThemeModeToggle'
+import Navigation from './Navigation'
 
 interface AppHeaderProps {
   compact?: boolean

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Link from 'next/link'
-
 import { Keyboard } from 'lucide-react'
 import {
   NavigationMenu,
