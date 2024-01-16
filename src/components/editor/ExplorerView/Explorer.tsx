@@ -74,7 +74,11 @@ function ExplorerTree() {
   }
 
   return (
-    <Tree onValueChange={handleExpand} defaultDepth={0}>
+    <Tree
+      className="text-muted-foreground"
+      onValueChange={handleExpand}
+      defaultDepth={0}
+    >
       <ExplorerBranch value={'0'} title="Folder">
         <ExplorerLeaf value={'0-1'}>Deep Inner File</ExplorerLeaf>
         <ExplorerBranch value={'5'} title="Folder">
