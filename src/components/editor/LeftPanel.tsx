@@ -1,4 +1,4 @@
-import ExplorerView from './ExplorerView'
+import ExplorerView from './ExplorerView/ExplorerView'
 
 export default function LeftPanel() {
   return (
