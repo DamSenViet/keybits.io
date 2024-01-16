@@ -81,18 +81,22 @@ export const TreeTrigger = React.forwardRef<
 export type TreeRootProps = Omit<
   AccordionPrimitive.AccordionMultipleProps,
   'type'
->
+> & {
+  defaultDepth?: number
+}
 
-export const TreeRoot = React.forwardRef<
+export const Tree = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Root>,
   TreeRootProps
->(({ className, ...props }, ref) => {
+>(({ className, defaultDepth = 0, ...props }, ref) => {
   return (
-    <AccordionPrimitive.Root
-      ref={ref}
-      className={cn('', className)}
-      type={'multiple'}
-      {...props}
-    />
+    <TreeDepthProvider value={defaultDepth}>
+      <AccordionPrimitive.Root
+        ref={ref}
+        className={cn('', className)}
+        type={'multiple'}
+        {...props}
+      />
+    </TreeDepthProvider>
   )
 })

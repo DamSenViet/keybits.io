@@ -3,7 +3,7 @@
 import { ComponentPropsWithoutRef, forwardRef, ElementRef } from 'react'
 import { ChevronDown, Folder, FolderOpen, File } from 'lucide-react'
 import {
-  TreeRoot,
+  Tree,
   TreeItem,
   TreeHeader,
   TreeTrigger,
@@ -67,14 +67,14 @@ export const ExplorerLeaf = forwardRef<
 
 function ExplorerTree() {
   const [, setExpanded] = useExpanded()
-  const handleExpand: ComponentPropsWithoutRef<
-    typeof TreeRoot
-  >['onValueChange'] = (expanded) => {
+  const handleExpand: ComponentPropsWithoutRef<typeof Tree>['onValueChange'] = (
+    expanded
+  ) => {
     setExpanded(expanded)
   }
 
   return (
-    <TreeRoot onValueChange={handleExpand}>
+    <Tree onValueChange={handleExpand} defaultDepth={0}>
       <ExplorerBranch value={'0'} title="Folder">
         <ExplorerLeaf value={'0-1'}>Deep Inner File</ExplorerLeaf>
         <ExplorerBranch value={'5'} title="Folder">
@@ -88,7 +88,7 @@ function ExplorerTree() {
       <ExplorerBranch value={'1'} title="Folder">
         <ExplorerLeaf value={'1-1'}>File</ExplorerLeaf>
       </ExplorerBranch>
-    </TreeRoot>
+    </Tree>
   )
 }
 
