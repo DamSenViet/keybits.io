@@ -17,8 +17,8 @@ const TREE_INDENT_PX = 10
 
 export const ExplorerBranch = forwardRef<
   ElementRef<typeof TreeItem>,
-  ComponentPropsWithoutRef<typeof TreeItem>
->(({ className, children, value, title }, ref) => {
+  ComponentPropsWithoutRef<typeof TreeItem> & { indentGuide?: boolean }
+>(({ className, children, value, title, indentGuide = false }, ref) => {
   const depth = useTreeDepth()
   const [expanded] = useExpanded()
 
@@ -27,7 +27,7 @@ export const ExplorerBranch = forwardRef<
   return (
     <TreeItem
       ref={ref}
-      className={cn('text-xs font-normal', className)}
+      className={cn('relative text-xs font-normal', className)}
       value={value}
     >
       <TreeHeader className="flex items-center justify-start transition-all hover:underline hover:bg-input">
@@ -42,7 +42,17 @@ export const ExplorerBranch = forwardRef<
         {/* buttons */}
         <div className="flex-grow"></div>
       </TreeHeader>
-      <TreeContent>{children}</TreeContent>
+      <TreeContent className="relative w-full">
+        {indentGuide && (
+          <div
+            className="absolute top-0 h-full border-l-2 border-input"
+            style={{
+              marginLeft: `${depth * TREE_INDENT_PX + 4}px`,
+            }}
+          />
+        )}
+        {children}
+      </TreeContent>
     </TreeItem>
   )
 })
@@ -55,7 +65,7 @@ export const ExplorerLeaf = forwardRef<
   return (
     <TreeItem
       ref={ref}
-      className={cn('flex py-2 hover:bg-input', className)}
+      className={cn('relative flex py-2 hover:bg-input', className)}
       style={{ paddingLeft: `${depth * TREE_INDENT_PX + 16}px` }}
       value={value}
     >
