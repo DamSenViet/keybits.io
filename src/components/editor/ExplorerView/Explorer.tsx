@@ -8,37 +8,50 @@ import {
   TreeHeader,
   TreeTrigger,
   TreeContent,
-  useTreeDepth,
 } from '@/components/ui/tree'
+import { useExpanded } from '@/hooks/useExpanded'
+import useNestedDepth from '@/hooks/useNestedDepth'
 import { cn } from '@/lib/utils'
-import { ExpandedProvider, useExpanded } from './expanded'
+import ExpandedProvider from '@/providers/ExpandedProvider'
+import NestedDepthProvider from '@/providers/NestedDepthProvider'
 
 const TREE_INDENT_PX = 10
 
-export const ExplorerBranch = forwardRef<
+const ExplorerItem = forwardRef<
   ElementRef<typeof TreeItem>,
-  ComponentPropsWithoutRef<typeof TreeItem> & { indentGuide?: boolean }
+  ComponentPropsWithoutRef<typeof TreeItem>
+>(({ className, ...props }, ref) => {
+  return (
+    <NestedDepthProvider>
+      <TreeItem
+        className={cn('relative text-xs font-normal', className)}
+        ref={ref}
+        {...props}
+      ></TreeItem>
+    </NestedDepthProvider>
+  )
+})
+
+const ExplorerBranch = forwardRef<
+  ElementRef<typeof ExplorerItem>,
+  ComponentPropsWithoutRef<typeof ExplorerItem> & { indentGuide?: boolean }
 >(({ className, children, value, title, indentGuide = false }, ref) => {
-  const depth = useTreeDepth()
+  const depth = useNestedDepth()
   const [expanded] = useExpanded()
 
   const FolderIcon = expanded.includes(value) ? FolderOpen : Folder
 
   return (
-    <TreeItem
-      ref={ref}
-      className={cn('relative text-xs font-normal', className)}
-      value={value}
-    >
-      <TreeHeader className="flex items-center justify-start transition-all hover:underline hover:bg-input">
+    <ExplorerItem ref={ref} className={cn(className)} value={value}>
+      <TreeHeader className="h-8 flex items-center justify-start transition-all hover:bg-input">
         <TreeTrigger
           className="flex items-center [&[data-state=open]>svg:first-child]:rotate-0"
           style={{ paddingLeft: `${depth * TREE_INDENT_PX}px` }}
         >
           <ChevronDown className="h-3 w-3 mr-1 transition-transform duration-200 -rotate-90" />
-          <FolderIcon className="h-4 w-4 mr-1" />
-          <span>{title}</span>
         </TreeTrigger>
+        <FolderIcon className="h-4 w-4 mr-1" />
+        <span>{title}</span>
         {/* buttons */}
         <div className="flex-grow"></div>
       </TreeHeader>
@@ -53,25 +66,24 @@ export const ExplorerBranch = forwardRef<
         )}
         {children}
       </TreeContent>
-    </TreeItem>
+    </ExplorerItem>
   )
 })
 
-export const ExplorerLeaf = forwardRef<
-  ElementRef<typeof TreeItem>,
-  ComponentPropsWithoutRef<typeof TreeItem>
+const ExplorerLeaf = forwardRef<
+  ElementRef<typeof ExplorerItem>,
+  ComponentPropsWithoutRef<typeof ExplorerItem>
 >(({ className, children, value }, ref) => {
-  const depth = useTreeDepth()
+  const depth = useNestedDepth()
   return (
-    <TreeItem
+    <ExplorerItem
       ref={ref}
-      className={cn('relative flex py-2 hover:bg-input', className)}
+      className={cn('h-8 relative flex items-center hover:bg-input', className)}
       style={{ paddingLeft: `${depth * TREE_INDENT_PX + 16}px` }}
       value={value}
     >
-      <File className="h-4 w-4 mr-1" />
-      <span>{children}</span>
-    </TreeItem>
+      <File className="h-4 w-4 mr-1" /> <div>{children}</div>
+    </ExplorerItem>
   )
 })
 
@@ -84,11 +96,7 @@ function ExplorerTree() {
   }
 
   return (
-    <Tree
-      className="text-muted-foreground"
-      onValueChange={handleExpand}
-      defaultDepth={0}
-    >
+    <Tree className="text-muted-foreground" onValueChange={handleExpand}>
       <ExplorerBranch value={'0'} title="Folder">
         <ExplorerLeaf value={'0-1'}>Deep Inner File</ExplorerLeaf>
         <ExplorerBranch value={'5'} title="Folder">
@@ -109,7 +117,9 @@ function ExplorerTree() {
 export default function Explorer() {
   return (
     <ExpandedProvider>
-      <ExplorerTree />
+      <NestedDepthProvider value={0}>
+        <ExplorerTree />
+      </NestedDepthProvider>
     </ExpandedProvider>
   )
 }

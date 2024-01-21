@@ -3,22 +3,19 @@
 import * as React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { cn } from '@/lib/utils'
-import { TreeDepthProvider } from './depth'
 
 export const TreeItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, children, ...props }, ref) => {
   return (
-    <TreeDepthProvider>
-      <AccordionPrimitive.Item
-        ref={ref}
-        className={cn('text-xs font-normal', className)}
-        {...props}
-      >
-        {children}
-      </AccordionPrimitive.Item>
-    </TreeDepthProvider>
+    <AccordionPrimitive.Item
+      ref={ref}
+      className={cn('text-xs font-normal', className)}
+      {...props}
+    >
+      {children}
+    </AccordionPrimitive.Item>
   )
 })
 
@@ -81,22 +78,18 @@ export const TreeTrigger = React.forwardRef<
 export type TreeRootProps = Omit<
   AccordionPrimitive.AccordionMultipleProps,
   'type'
-> & {
-  defaultDepth?: number
-}
+>
 
 export const Tree = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Root>,
   TreeRootProps
->(({ className, defaultDepth = 0, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
   return (
-    <TreeDepthProvider value={defaultDepth}>
-      <AccordionPrimitive.Root
-        ref={ref}
-        className={cn('', className)}
-        type={'multiple'}
-        {...props}
-      />
-    </TreeDepthProvider>
+    <AccordionPrimitive.Root
+      ref={ref}
+      className={cn('', className)}
+      type={'multiple'}
+      {...props}
+    />
   )
 })
