@@ -1,9 +1,31 @@
 'use client'
 
 import { FormEventHandler, useState, forwardRef } from 'react'
+import Tree from '@/components/ui/NestedDataTree/Tree'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import Explorer from './Explorer'
+
+interface TreeNode {
+  name: string
+  children?: TreeNode[]
+}
+
+const tree: TreeNode = {
+  name: 'Root',
+  children: [
+    {
+      name: 'Folder A',
+    },
+    {
+      name: 'Folder B',
+      children: [
+        {
+          name: 'Nested In B',
+        },
+      ],
+    },
+  ],
+}
 
 interface ExplorerViewProps {
   className?: string
@@ -24,7 +46,12 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <Explorer />
+        <Tree<TreeNode>
+          node={tree}
+          getNodeId={(node) => node.name}
+          getNodeChildren={(node) => node.children ?? []}
+          nodeHeaderComponent={(node) => <span>{node.node.name}</span>}
+        />
       </div>
     )
   }
