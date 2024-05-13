@@ -1,17 +1,21 @@
-import { isUndefined } from 'lodash'
+import { ContextType, PropsWithChildren } from 'react'
+import { useUncontrolled } from '@mantine/hooks'
 import NestedDepthContext from '@/contexts/NestedDepthContext'
 import useNestedDepth from '@/hooks/useNestedDepth'
+
+export interface NestedDepthProviderProps {
+  value?: ContextType<typeof NestedDepthContext>
+}
 
 export default function NestedDepthProvider({
   children,
   value,
-}: {
-  children: React.ReactNode
-  value?: number
-}) {
-  const depth = useNestedDepth()
+}: PropsWithChildren<NestedDepthProviderProps>) {
+  const finalValue = useNestedDepth()
+  const [depth] = useUncontrolled({ value, finalValue })
+
   return (
-    <NestedDepthContext.Provider value={isUndefined(value) ? depth + 1 : value}>
+    <NestedDepthContext.Provider value={depth + 1}>
       {children}
     </NestedDepthContext.Provider>
   )

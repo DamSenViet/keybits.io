@@ -8,7 +8,7 @@ import {
   TreeHeader,
   TreeTrigger,
   TreeContent,
-} from '@/components/ui/tree'
+} from '@/components/ui/radixtree'
 import { useExpanded } from '@/hooks/useExpanded'
 import useNestedDepth from '@/hooks/useNestedDepth'
 import { cn } from '@/lib/utils'
