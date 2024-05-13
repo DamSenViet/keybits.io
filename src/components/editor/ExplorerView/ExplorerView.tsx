@@ -1,8 +1,8 @@
 'use client'
 
 import { FormEventHandler, useState, forwardRef } from 'react'
-import Tree from '@/components/ui/NestedDataTree/Tree'
 import { Input } from '@/components/ui/input'
+import Tree from '@/components/ui/richtree/Tree'
 import { cn } from '@/lib/utils'
 
 interface TreeNode {
