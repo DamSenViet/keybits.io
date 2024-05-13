@@ -1,13 +1,16 @@
-import { ReactNode, useState } from 'react'
+import { useState, Key, PropsWithChildren, ContextType } from 'react'
 import ExpandedContext from '@/contexts/ExpandedContext'
+
+export interface ExpandedProviderProps {
+  value?: ContextType<typeof ExpandedContext>
+}
 
 export default function ExpandedProvider({
   children,
-}: {
-  children: ReactNode
-}) {
+  value,
+}: PropsWithChildren<ExpandedProviderProps>) {
   return (
-    <ExpandedContext.Provider value={useState<string[]>([])}>
+    <ExpandedContext.Provider value={value ?? useState<Key[]>([])}>
       {children}
     </ExpandedContext.Provider>
   )
