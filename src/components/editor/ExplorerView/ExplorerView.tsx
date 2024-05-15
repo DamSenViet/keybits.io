@@ -1,6 +1,13 @@
 'use client'
 
-import { FormEventHandler, useState, forwardRef } from 'react'
+import {
+  FormEventHandler,
+  useState,
+  forwardRef,
+  useMemo,
+  useCallback,
+} from 'react'
+import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
 import Tree from '@/components/ui/richtree/Tree'
 import { cn } from '@/lib/utils'
@@ -22,6 +29,14 @@ const tree: TreeNode = {
         {
           name: 'Nested In B',
         },
+        {
+          name: 'Sibling of Nested in  B',
+          children: [
+            {
+              name: 'Deeply Nested',
+            },
+          ],
+        },
       ],
     },
   ],
@@ -35,6 +50,39 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
   ({ className }, ref) => {
     const [search, setSearch] = useState('')
 
+    const searchPredicate = useCallback(
+      (node: TreeNode) => node.name.indexOf(search) > -1,
+      [search]
+    )
+
+    const filterTree = (
+      nodes: TreeNode[],
+      predicate: ListIterator<TreeNode, boolean>
+    ) => {
+      const getNodes = (
+        prev: TreeNode[],
+        curr: TreeNode,
+        index: number,
+        list: List<TreeNode>
+      ) => {
+        if (predicate(curr, index, list)) {
+          prev.push(curr)
+          return prev
+        }
+        if (curr.children) {
+          const nodes = reduce(curr.children, getNodes, [])
+          if (nodes.length) prev.push({ ...curr, children: nodes })
+        }
+        return prev
+      }
+      return reduce(nodes, getNodes, [])
+    }
+
+    const filteredTree = useMemo(
+      () => filterTree([tree], searchPredicate),
+      [tree, searchPredicate]
+    )
+
     const handleSearch: FormEventHandler<HTMLInputElement> = (event) =>
       setSearch(event.currentTarget.value)
 
@@ -46,11 +94,12 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <Tree<TreeNode>
-          node={tree}
+        <Tree
+          nodes={filteredTree}
           getNodeId={(node) => node.name}
           getNodeChildren={(node) => node.children ?? []}
-          nodeHeaderComponent={(node) => <span>{node.node.name}</span>}
+          nodeTitleComponent={(node) => <div>{node.node.name}</div>}
+          expanded={['Root', 'Folder B', 'Sibling of Nested in  B']}
         />
       </div>
     )

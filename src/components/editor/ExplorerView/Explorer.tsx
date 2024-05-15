@@ -116,10 +116,10 @@ function ExplorerTree() {
 
 export default function Explorer() {
   return (
-    <ExpandedProvider>
-      <NestedDepthProvider value={0}>
-        <ExplorerTree />
-      </NestedDepthProvider>
-    </ExpandedProvider>
+    // <ExpandedProvider>
+    //   <NestedDepthProvider value={0}>
+    <ExplorerTree />
+    //   </NestedDepthProvider>
+    // </ExpandedProvider>
   )
 }

@@ -2,6 +2,7 @@ import { PropsWithChildren, FC } from 'react'
 
 export interface TreeNodeTitleProps {
   className?: string
+  isExpanded: boolean
 }
 
 const TreeNodeTitle: FC<PropsWithChildren<TreeNodeTitleProps>> = ({

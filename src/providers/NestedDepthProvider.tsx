@@ -12,10 +12,10 @@ export default function NestedDepthProvider({
   value,
 }: PropsWithChildren<NestedDepthProviderProps>) {
   const finalValue = useNestedDepth()
-  const [depth] = useUncontrolled({ value, finalValue })
+  const [depth, , isControlled] = useUncontrolled({ value, finalValue })
 
   return (
-    <NestedDepthContext.Provider value={depth + 1}>
+    <NestedDepthContext.Provider value={isControlled ? depth : depth + 1}>
       {children}
     </NestedDepthContext.Provider>
   )
