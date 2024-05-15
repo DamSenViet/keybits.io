@@ -8,7 +8,7 @@ import {
   useCallback,
 } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
-import Tree from '@/components/ui/datatree/Tree'
+import Tree from '@/components/ui/data-tree/Tree'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
