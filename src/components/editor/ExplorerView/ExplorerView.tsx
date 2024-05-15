@@ -51,7 +51,8 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
     const [search, setSearch] = useState('')
 
     const searchPredicate = useCallback(
-      (node: TreeNode) => node.name.indexOf(search) > -1,
+      (node: TreeNode) =>
+        node.name.toLowerCase().indexOf(search.toLowerCase()) > -1,
       [search]
     )
 
