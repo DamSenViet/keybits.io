@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react'
 
 export interface TreeNodeTitleProps<T> extends PropsWithChildren {
   className?: string
+  isExpanded?: boolean
   node: T
 }
 

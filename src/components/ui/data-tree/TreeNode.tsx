@@ -2,7 +2,7 @@ import { FC, Key, ElementType, ComponentProps, PropsWithChildren } from 'react'
 import { useExpanded } from '@/hooks/useExpanded'
 import useNestedDepth from '@/hooks/useNestedDepth'
 import NestedDepthProvider from '@/providers/NestedDepthProvider'
-import TreeNodeChildren from './TreeNodeChildren'
+import TreeNodeChildren, { TreeNodeChildrenProps } from './TreeNodeChildren'
 import TreeNodeTitle, { TreeNodeTitleProps } from './TreeNodeTitle'
 
 export interface TreeNodeProps<T>
@@ -12,7 +12,7 @@ export interface TreeNodeProps<T>
   getNodeId: (node: T) => Key
   getNodeChildren: (node: T) => T[]
   nodeTitleComponent?: FC<TreeNodeTitleProps<T>>
-  nodeChildrenComponent?: typeof TreeNodeChildren
+  nodeChildrenComponent?: FC<TreeNodeChildrenProps>
 }
 
 const TreeNode = <T,>({
@@ -55,7 +55,7 @@ const TreeNode = <T,>({
         aria-setsize={nodeChildren.length}
         {...others}
       >
-        <NodeTitle node={node} />
+        <NodeTitle node={node} isExpanded={isExpanded} />
         {hasChildren && <NodeChildren>{childNodes}</NodeChildren>}
       </RootComponent>
     </NestedDepthProvider>
