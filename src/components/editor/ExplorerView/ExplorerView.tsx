@@ -10,14 +10,9 @@ import {
 import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import ExplorerTree from './ExplorerTree/ExplorerTree'
+import ExplorerTree, { ExplorerNode } from './ExplorerTree'
 
-interface TreeNode {
-  name: string
-  children?: TreeNode[]
-}
-
-const tree: TreeNode = {
+const tree: ExplorerNode = {
   name: 'Root',
   children: [
     {
@@ -51,20 +46,20 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
     const [search, setSearch] = useState('')
 
     const searchPredicate = useCallback(
-      (node: TreeNode) =>
+      (node: ExplorerNode) =>
         node.name.toLowerCase().indexOf(search.toLowerCase()) > -1,
       [search]
     )
 
     const filterTree = (
-      nodes: TreeNode[],
-      predicate: ListIterator<TreeNode, boolean>
+      nodes: ExplorerNode[],
+      predicate: ListIterator<ExplorerNode, boolean>
     ) => {
       const getNodes = (
-        prev: TreeNode[],
-        curr: TreeNode,
+        prev: ExplorerNode[],
+        curr: ExplorerNode,
         index: number,
-        list: List<TreeNode>
+        list: List<ExplorerNode>
       ) => {
         if (predicate(curr, index, list)) {
           prev.push(curr)

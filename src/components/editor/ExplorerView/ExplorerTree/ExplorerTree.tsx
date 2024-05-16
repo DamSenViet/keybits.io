@@ -1,14 +1,10 @@
 import { Tree } from '@/components/ui/data-tree'
 import withDefaultProps from '@/hocs/withDefaults'
+import { ExplorerNode } from './ExplorerNode'
 import ExplorerTreeNodeChildren from './ExplorerTreeNodeChildren'
 import ExplorerTreeNodeTitle from './ExplorerTreeNodeTitle'
 
-interface TreeNode {
-  name: string
-  children?: TreeNode[]
-}
-
-const ExplorerTree = withDefaultProps(Tree<TreeNode>, {
+const ExplorerTree = withDefaultProps(Tree<ExplorerNode>, {
   nodeTitleComponent: ExplorerTreeNodeTitle,
   nodeChildrenComponent: ExplorerTreeNodeChildren,
 })

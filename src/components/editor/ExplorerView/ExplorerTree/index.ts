@@ -1,1 +1,2 @@
-export { default as ExplorerTree } from './ExplorerTree'
+export { default } from './ExplorerTree'
+export { type ExplorerNode } from './ExplorerNode'

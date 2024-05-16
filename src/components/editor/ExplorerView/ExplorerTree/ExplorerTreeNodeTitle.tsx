@@ -1,17 +1,13 @@
 import { ChevronDown } from 'lucide-react'
 import { TreeNodeTitleProps } from '@/components/ui/data-tree'
 import { cn } from '@/lib/utils'
-
-interface TreeNode {
-  name: string
-  children?: TreeNode[]
-}
+import { ExplorerNode } from './ExplorerNode'
 
 const ExplorerTreeNodeTitle = ({
   className,
   node,
   isExpanded,
-}: TreeNodeTitleProps<TreeNode>) => {
+}: TreeNodeTitleProps<ExplorerNode>) => {
   return (
     <div className={cn('text-sm font-normal flex', className)}>
       <span>
