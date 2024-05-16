@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { useMount } from 'react-use'
+import { useState, useMemo, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 import { Sun, Moon } from 'lucide-react'
 import { Button } from './ui/button'
@@ -9,7 +8,7 @@ import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
 
 function ThemeModeToggle() {
   const [mounted, setMounted] = useState(false)
-  const { resolvedTheme, setTheme, theme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
 
   const Icon = useMemo(
     () => (resolvedTheme === 'light' ? Sun : Moon),
@@ -20,9 +19,9 @@ function ThemeModeToggle() {
     [mounted, Icon]
   )
 
-  useMount(() => {
+  useEffect(() => {
     setMounted(true)
-  })
+  }, [])
 
   return (
     <Popover>
