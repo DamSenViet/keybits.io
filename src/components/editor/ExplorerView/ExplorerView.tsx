@@ -8,9 +8,9 @@ import {
   useCallback,
 } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
-import Tree from '@/components/ui/data-tree/Tree'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import ExplorerTree from './ExplorerTree/ExplorerTree'
 
 interface TreeNode {
   name: string
@@ -80,7 +80,7 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
     }
 
     const filteredTree = useMemo(
-      () => filterTree([tree], searchPredicate),
+      () => filterTree(tree.children ?? [], searchPredicate),
       [tree, searchPredicate]
     )
 
@@ -95,11 +95,10 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <Tree
+        <ExplorerTree
           nodes={filteredTree}
           getNodeId={(node) => node.name}
           getNodeChildren={(node) => node.children ?? []}
-          nodeTitleComponent={(node) => <div>{node.node.name}</div>}
           expanded={['Root', 'Folder B', 'Sibling of Nested in  B']}
         />
       </div>
