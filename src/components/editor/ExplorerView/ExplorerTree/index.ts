@@ -1,2 +1,6 @@
 export { default } from './ExplorerTree'
-export { type ExplorerNode } from './ExplorerNode'
+export {
+  getExplorerNodeId,
+  getExplorerNodeChildren,
+  type ExplorerNode,
+} from './ExplorerNode'

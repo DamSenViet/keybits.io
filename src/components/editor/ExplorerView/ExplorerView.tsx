@@ -10,13 +10,18 @@ import {
 import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import ExplorerTree, { ExplorerNode } from './ExplorerTree'
+import ExplorerTree, {
+  ExplorerNode,
+  getExplorerNodeChildren,
+  getExplorerNodeId,
+} from './ExplorerTree'
 
 const tree: ExplorerNode = {
   name: 'Root',
   children: [
     {
       name: 'Folder A',
+      children: [],
     },
     {
       name: 'Folder B',
@@ -30,6 +35,7 @@ const tree: ExplorerNode = {
             {
               name: 'Deeply Nested',
             },
+            { name: 'Super duper long name in a nested item' },
           ],
         },
       ],
@@ -92,9 +98,8 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
         />
         <ExplorerTree
           nodes={filteredTree}
-          getNodeId={(node) => node.name}
-          getNodeChildren={(node) => node.children ?? []}
-          expanded={['Root', 'Folder B', 'Sibling of Nested in  B']}
+          getNodeId={getExplorerNodeId}
+          getNodeChildren={getExplorerNodeChildren}
         />
       </div>
     )
