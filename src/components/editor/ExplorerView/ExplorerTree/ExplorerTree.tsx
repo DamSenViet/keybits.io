@@ -69,7 +69,7 @@ const ExplorerTree = (props: ExplorerTreeProps) => {
           setActive(null)
         }}
         onDragCancel={() => setActive(null)}
-        modifiers={[({ transform }) => ({ ...transform, x: 0 })]}
+        // modifiers={[({ transform }) => ({ ...transform, x: 0 })]}
       >
         <Tree<ExplorerNode>
           {...props}
@@ -80,7 +80,10 @@ const ExplorerTree = (props: ExplorerTreeProps) => {
           branchComponent={ExplorerTreeBranch}
         />
         {createPortal(
-          <DragOverlay>
+          <DragOverlay
+            className="bg-blue-600"
+            style={{ width: undefined, height: undefined }}
+          >
             {activeNode ? getExplorerNodeId(activeNode) : null}
           </DragOverlay>,
           document.body

@@ -10,7 +10,7 @@ export interface FileActionViewProps {
 const FileActionView = forwardRef<HTMLDivElement, FileActionViewProps>(
   ({ className }, ref) => {
     return (
-      <div ref={ref} className={cn('flex flex-col', className)}>
+      <div ref={ref} className={cn('flex-none flex flex-col', className)}>
         <Button
           className="text-xs text-muted-foreground font-normal justify-start"
           variant={'ghost'}

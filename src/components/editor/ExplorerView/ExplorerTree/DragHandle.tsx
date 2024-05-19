@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { DraggableAttributes } from '@dnd-kit/core'
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
+import { GripVertical } from 'lucide-react'
 
 interface DragHandleProps {
   attributes: DraggableAttributes
@@ -10,10 +11,13 @@ interface DragHandleProps {
 const DragHandle = forwardRef<HTMLButtonElement, DragHandleProps>(
   ({ attributes, listeners }, ref) => {
     return (
-      <button className="DragHandle" ref={ref} {...attributes} {...listeners}>
-        <svg viewBox="0 0 20 20" width="12">
-          <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
-        </svg>
+      <button
+        className="hover:bg-input bg-opacity-50  rounded-md py-2 px-1 mr-2"
+        ref={ref}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="stroke-gray-500" size={16} />
       </button>
     )
   }

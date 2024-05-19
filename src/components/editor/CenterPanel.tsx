@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactNode, useMemo, useState, Fragment } from 'react'
-import { identity } from 'lodash'
+import { useState } from 'react'
+import Test from './DnDTest/Test'
 import { SortableList } from './SortableList'
 
 const characters = ['A', 'B', 'C', 'D', 'E']
@@ -13,7 +13,6 @@ export default function CenterPanel() {
     }))
   )
 
-  const getId = identity
   return (
     <div className="grow p-16">
       <SortableList
@@ -27,6 +26,7 @@ export default function CenterPanel() {
           </SortableList.Item>
         )}
       />
+      <Test />
     </div>
   )
 }

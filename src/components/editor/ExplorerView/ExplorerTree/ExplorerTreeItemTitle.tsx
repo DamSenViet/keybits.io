@@ -1,13 +1,6 @@
 import { Key, useCallback, useContext } from 'react'
 import { isArray, uniq } from 'lodash'
-import {
-  ChevronDown,
-  Folder,
-  FolderOpen,
-  File,
-  Eye,
-  EyeOff,
-} from 'lucide-react'
+import { ChevronDown, Folder, FolderOpen, File } from 'lucide-react'
 import { TreeItemTitleProps } from '@/components/ui/data-tree'
 import { useExpanded } from '@/hooks/useExpanded'
 import useNestedDepth from '@/hooks/useNestedDepth'
@@ -15,7 +8,6 @@ import { cn } from '@/lib/utils'
 import DragHandle from './DragHandle'
 import draggableItemContext from './DraggableItemContext'
 import { ExplorerNode, getExplorerNodeId } from './ExplorerNode'
-import sortableItemContext from './SortableItemContext'
 
 const TREE_INDENT_PX = 8
 
@@ -40,7 +32,7 @@ function ExplorerTreeItemTitleContent({
       ) : (
         <File className={'flex-none h-4 w-4 ml-5 mr-1'} />
       )}
-      <div className="text-nowrap whitespace-nowrap overflow-hidden overflow-ellipsis">
+      <div className="shrink text-nowrap whitespace-nowrap overflow-hidden overflow-ellipsis">
         {node.name}
       </div>
     </div>
@@ -54,12 +46,20 @@ const ExplorerTreeItemTitle = ({ item }: TreeItemTitleProps<ExplorerNode>) => {
   const isExpanded = expanded.includes(nodeId)
   const willShowChevron = isArray(item.children)
 
-  const { isDragging, attributes, listeners, setActivatorNodeRef } =
-    useContext(draggableItemContext)!
+  const {
+    active,
+    isDragging,
+    attributes,
+    transform,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+  } = useContext(draggableItemContext)!
 
   const style = {
-    opacity: isDragging ? 0.5 : undefined,
-    cursor: isDragging ? 'grabbing' : 'grab',
+    transform: transform
+      ? `translate(${transform.x}px, ${transform.y}px)`
+      : undefined,
   }
 
   const toggleExpand = useCallback(() => {
@@ -75,9 +75,14 @@ const ExplorerTreeItemTitle = ({ item }: TreeItemTitleProps<ExplorerNode>) => {
   return (
     <div
       className={cn(
-        'flex flex-row items-center text-xs font-normal py-1 my-1 rounded-sm group hover:bg-input flex-nowrap min-w-0'
+        'flex flex-row items-center text-xs font-normal py-1 rounded-sm group flex-nowrap min-w-0 max-w-full',
+        'cursor-pointer',
+        !active ? 'hover:bg-input' : null,
+        isDragging ? 'opacity-40 bg-input' : null
       )}
-      style={style}
+      onClick={toggleExpand}
+      ref={setNodeRef}
+      // style={style}
     >
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
       {willShowChevron && (
@@ -91,6 +96,7 @@ const ExplorerTreeItemTitle = ({ item }: TreeItemTitleProps<ExplorerNode>) => {
           )}
         />
       )}
+
       <ExplorerTreeItemTitleContent
         nodeId={nodeId}
         node={item}
@@ -98,7 +104,7 @@ const ExplorerTreeItemTitle = ({ item }: TreeItemTitleProps<ExplorerNode>) => {
         isExpanded={isExpanded}
       />
 
-      <span className="flex-none">
+      <span className="flex-none min-w-0">
         <DragHandle
           ref={setActivatorNodeRef}
           attributes={attributes}
@@ -106,12 +112,12 @@ const ExplorerTreeItemTitle = ({ item }: TreeItemTitleProps<ExplorerNode>) => {
         />
       </span>
 
-      {/* <div className="flex-none flex"> */}
-      {/* hover visible actions */}
-      {/* <EyeOff className="h-4 w-4 mr-1 block group-hover:hidden" /> */}
-      {/* hover hover visible actions */}
-      {/* <Eye className="h-4 w-4 mr-1 hidden group-hover:block" /> */}
-      {/* </div> */}
+      <div className="flex-none flex">
+        {/* hover visible actions */}
+        {/* <EyeOff className="h-4 w-4 mr-1 block group-hover:hidden" /> */}
+        {/* hover hover visible actions */}
+        {/* <Eye className="h-4 w-4 mr-1 hidden group-hover:block" /> */}
+      </div>
     </div>
   )
 }

@@ -31,7 +31,14 @@ const tree: ExplorerNode = {
             {
               name: 'Deeply Nested',
             },
-            { name: 'Super duper long name in a nested item' },
+            {
+              name: 'Super duper long name in a nested item',
+              children: [
+                {
+                  name: 'DEEEPLY NESTED AND VERY VERY VERY LONG',
+                },
+              ],
+            },
           ],
         },
       ],
@@ -94,14 +101,14 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
       setSearch(event.currentTarget.value)
 
     return (
-      <div ref={ref} className={cn('flex-1', className)}>
+      <div ref={ref} className={cn('flex-grow', className)}>
         <Input
-          className="mb-6 text-xs"
+          className="mb-6 text-xs mx-0"
           placeholder="Search"
           onInput={handleSearch}
           value={search}
         />
-        <ExplorerTree items={filteredTree[0].children!} />
+        <ExplorerTree className="relative" items={filteredTree[0].children!} />
       </div>
     )
   }

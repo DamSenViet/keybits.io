@@ -34,7 +34,7 @@ const TreeItem = <T,>({
 
   const childNodes = isExpanded
     ? childItems.map((childNode, i) => (
-        <TreeItem<T>
+        <ItemComponent
           key={getItemId(childNode)}
           item={childNode}
           getItemId={getItemId}
