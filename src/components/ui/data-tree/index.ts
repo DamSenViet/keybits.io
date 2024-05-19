@@ -1,10 +1,7 @@
 export { default as Tree, type TreeProps } from './Tree'
-export { default as TreeNode, type TreeNodeProps } from './TreeNode'
+export { default as TreeItem, type TreeItemProps } from './TreeItem'
+export { default as TreeBranch, type TreeBranchProps } from './TreeBranch'
 export {
-  default as TreeNodeChildren,
-  type TreeNodeChildrenProps,
-} from './TreeNodeChildren'
-export {
-  default as TreeNodeTitle,
-  type TreeNodeTitleProps,
-} from './TreeNodeTitle'
+  default as TreeItemTitle,
+  type TreeItemTitleProps,
+} from './TreeItemTitle'

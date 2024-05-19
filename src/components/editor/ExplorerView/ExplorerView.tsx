@@ -10,11 +10,7 @@ import {
 import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import ExplorerTree, {
-  ExplorerNode,
-  getExplorerNodeChildren,
-  getExplorerNodeId,
-} from './ExplorerTree'
+import ExplorerTree, { ExplorerNode } from './ExplorerTree'
 
 const tree: ExplorerNode = {
   name: 'Root',
@@ -40,6 +36,13 @@ const tree: ExplorerNode = {
         },
       ],
     },
+    {
+      name: 'Folder C',
+      children: [],
+    },
+    {
+      name: 'File D',
+    },
   ],
 }
 
@@ -53,7 +56,9 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
 
     const searchPredicate = useCallback(
       (node: ExplorerNode) =>
-        node.name.toLowerCase().indexOf(search.toLowerCase()) > -1,
+        search === ''
+          ? true
+          : node.name.toLowerCase().indexOf(search.toLowerCase()) > -1,
       [search]
     )
 
@@ -81,7 +86,7 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
     }
 
     const filteredTree = useMemo(
-      () => filterTree(tree.children ?? [], searchPredicate),
+      () => filterTree([tree] ?? [], searchPredicate),
       [tree, searchPredicate]
     )
 
@@ -96,11 +101,7 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <ExplorerTree
-          nodes={filteredTree}
-          getNodeId={getExplorerNodeId}
-          getNodeChildren={getExplorerNodeChildren}
-        />
+        <ExplorerTree items={filteredTree[0].children!} />
       </div>
     )
   }
