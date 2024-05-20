@@ -1,6 +1,6 @@
 import { useMemo, useState, useId, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Active, DndContext, DragOverlay } from '@dnd-kit/core'
+import { Active, DndContext, DragOverlay, pointerWithin } from '@dnd-kit/core'
 import { isUndefined, negate } from 'lodash'
 import { Tree, TreeProps } from '@/components/ui/data-tree'
 import {
@@ -24,16 +24,16 @@ export interface ExplorerTreeProps
   // onChange: (node: ExplorerNode) => void
 }
 
-const bfs = <T,>(
-  node: T,
+function bfs<T>(
+  nodes: readonly T[],
   getChildren: (node: T) => T[],
   predicate: (node: T) => boolean
-) => {
-  const queue = [node]
+) {
+  const queue = nodes.slice()
   while (queue.length > 0) {
-    const next = queue.pop()!
-    if (predicate(next)) return node
-    const childNodes = getChildren(next)
+    const node = queue.shift()!
+    if (predicate(node)) return node
+    const childNodes = getChildren(node)
     for (const childNode of childNodes) queue.push(childNode)
   }
   return undefined
@@ -42,21 +42,14 @@ const bfs = <T,>(
 const ExplorerTree = (props: ExplorerTreeProps) => {
   const dndId = useId()
   const [active, setActive] = useState<Active | null>(null)
-  const activeNode = useMemo(
-    () =>
-      active?.id
-        ? props.items
-            .map((item) =>
-              bfs(
-                item,
-                getExplorerNodeChildren,
-                (node) => getExplorerNodeId(node) === active?.id
-              )
-            )
-            .find(negate(isUndefined))
-        : undefined,
-    [active?.id]
-  )
+  const activeNode = useMemo(() => {
+    if (!active) return undefined
+    return bfs(
+      props.items,
+      getExplorerNodeChildren,
+      (node) => getExplorerNodeId(node) === active.id
+    )
+  }, [active?.id, props.items])
 
   useEffect(() => console.log(`active node is ${active?.id}`), [active?.id])
 
@@ -64,6 +57,7 @@ const ExplorerTree = (props: ExplorerTreeProps) => {
     <>
       <DndContext
         id={dndId}
+        collisionDetection={pointerWithin}
         onDragStart={({ active }) => setActive(active)}
         onDragEnd={() => {
           setActive(null)

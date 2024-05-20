@@ -12,7 +12,7 @@ export default function Droppable({ id }: DroppableProps) {
   return (
     <div
       className={cn(
-        'py-5 px-5 bg-gray-30 rounded-lg drop-shadow-lg',
+        'py-5 px-5 bg-gray-30 rounded-lg drop-shadow-lg text-sm',
         isOver ? 'bg-green-300 text-green-500 stroke-green-500' : 'bg-slate-300'
       )}
       ref={setNodeRef}

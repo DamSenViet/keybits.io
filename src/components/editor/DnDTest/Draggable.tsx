@@ -18,7 +18,7 @@ export default function Draggable({ id }: DraggableProps) {
 
   return (
     <div
-      className="py-5 px-5 bg-white rounded-lg drop-shadow-lg"
+      className="py-5 px-5 bg-white rounded-lg drop-shadow-lg text-sm"
       ref={setNodeRef}
       style={style}
       {...listeners}
