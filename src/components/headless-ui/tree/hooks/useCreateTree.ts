@@ -1,50 +1,59 @@
-import { useMemo, HTMLAttributes } from 'react'
+import { useMemo, HTMLAttributes, Key, useEffect } from 'react'
 import { useUncontrolled } from '@mantine/hooks'
+import { noop } from 'lodash'
 import { TreeContextValue, TreeItemA11yAttributes } from '../types'
 import { each } from '../utils/traversal'
 
 export interface Options<TItem> {
+  // not sure if we want to make this a subset or not...
+  filteredItems?: TItem[]
   // expansion
-  expanded?: TItem[]
-  onExpandedChange?: (item: TItem[]) => void
+  expandedItems?: TItem[]
+  onExpandedItemsChange?: (item: TItem[]) => void
   // selection
   multiSelectable?: boolean
-  selected?: TItem[]
-  onSelectedChange?: (item: TItem[]) => void
-  filtered?: TItem[]
+  selectedItems?: TItem[]
+  onSelectedItemsChange?: (item: TItem[]) => void
 }
 
 export default function useCreateTree<TItem>(
   items: TItem[],
+  getId: (item: TItem) => Key,
   getChildren: (item: TItem) => TItem[] | undefined,
   {
-    selected,
-    expanded,
-    // filtered should be a flattened set of items
-    filtered = items,
+    filteredItems = items,
+    expandedItems,
+    onExpandedItemsChange,
     multiSelectable = false,
+    selectedItems,
+    onSelectedItemsChange,
   }: Partial<Options<TItem>>
 ) {
   // need to keep track of last focused
   // by default we should focus the first element
   const focused = useUncontrolled({ finalValue: undefined })
 
-  const [resolvedExpanded, setResolvedExpanded] = useUncontrolled({
-    value: expanded ?? [],
-    // onChange: onExpandedChange,
+  const [resolvedExpanded, setResolvedExpanded] = useUncontrolled<TItem[]>({
+    // value: expandedItems,
+    finalValue: [],
+    onChange: onExpandedItemsChange,
   })
 
-  const uniqExpanded = useMemo(
+  useEffect(() => {
+    console.log(resolvedExpanded)
+  }, [resolvedExpanded])
+
+  const uniqExpandedItems = useMemo(
     () => new Set<TItem>(resolvedExpanded),
     [resolvedExpanded]
   )
 
   const [resolvedSelected, setResolvedSelected] = useUncontrolled({
-    value: selected ?? [],
-    // onChange: onSelectedChange,
+    value: selectedItems,
+    onChange: onSelectedItemsChange,
   })
 
-  const uniqSelected = useMemo(
+  const uniqSelectedItems = useMemo(
     () => new Set<TItem>(resolvedSelected),
     [resolvedSelected]
   )
@@ -63,34 +72,34 @@ export default function useCreateTree<TItem>(
         nodeToDepth.set(node, depth)
       })
 
-      return [
-        nodeToParent,
-        nodeToChildren,
-        nodeToFilteredChildren,
-        nodeToDepth,
-        filtered,
-      ]
+      return [nodeToParent, nodeToChildren, nodeToFilteredChildren, nodeToDepth]
     }, [items, getChildren])
 
   const nodeToA11y = useMemo(() => {
     const nodeToA11y = new Map<TItem, TreeItemA11yAttributes>()
     for (const node of nodeToChildren.keys()) {
+      const childNodes = nodeToChildren.get(node)
+      const parent = nodeToParent.get(node)
+      const parentChildNodes = parent ? nodeToChildren.get(parent) ?? [] : items
       const a11y: TreeItemA11yAttributes = {
-        'aria-expanded': uniqExpanded.has(node),
-        'aria-selected': uniqSelected.has(node),
+        'aria-expanded': uniqExpandedItems.has(node),
+        'aria-selected': uniqSelectedItems.has(node),
         tabIndex: node === focused ? -1 : 0,
-        'aria-setsize': nodeToChildren.get(node)!.length,
-        'aria-posinset': 0,
+        ...(childNodes ? { 'aria-setsize': childNodes.length } : {}),
+        'aria-posinset': parentChildNodes.indexOf(node),
         'aria-level': nodeToDepth.get(node)!,
       }
       nodeToA11y.set(node, a11y)
     }
     return nodeToA11y
-  }, [nodeToParent, nodeToChildren, nodeToDepth, uniqExpanded])
+  }, [nodeToParent, nodeToChildren, nodeToDepth, uniqExpandedItems])
 
   const contextValue: TreeContextValue<TItem> = {
-    uniqExpanded,
-    uniqSelected,
+    getItemId: getId,
+    getItemChildren: getChildren,
+    setExpandedItems: setResolvedExpanded,
+    uniqExpandedItems,
+    uniqSelectedItems,
     nodeToParent,
     nodeToChildren,
     nodeToFilteredChildren,

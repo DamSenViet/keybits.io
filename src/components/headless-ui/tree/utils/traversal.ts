@@ -33,7 +33,7 @@ export const each = <TItem>(
 
 export const find = <TItem>(
   items: TItem | TItem[],
-  getChildren: (item: TItem) => TItem[],
+  getChildren: (item: TItem) => TItem[] | undefined,
   callback: TreeIteratee<TItem, boolean>,
   strategy: TraversalStrategy = 'bfs'
 ) => {
@@ -45,7 +45,7 @@ export const find = <TItem>(
     const [curr, parent, depth] = queue.shift()!
     const res = callback(curr, parent, { depth })
     if (res) return curr
-    for (const child of getChildren(curr))
+    for (const child of getChildren(curr) ?? [])
       if (strategy === 'bfs') queue.push([child, curr, depth + 1])
       else queue.unshift([child, curr, depth + 1])
   }

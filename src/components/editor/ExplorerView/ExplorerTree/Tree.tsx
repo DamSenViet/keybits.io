@@ -3,6 +3,7 @@
 import { useId, useMemo, useState, ComponentProps } from 'react'
 import { createPortal } from 'react-dom'
 import { Active, DndContext, DragOverlay, pointerWithin } from '@dnd-kit/core'
+import { SortableContext } from '@dnd-kit/sortable'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
 import {
@@ -16,16 +17,37 @@ import TreeItemTitle from './TreeItemTitle'
 
 interface TreeProps extends ComponentProps<'ul'> {
   items: ExplorerNode[]
+  filteredItems?: ExplorerNode[]
+  expandedItems?: ExplorerNode[]
+  onExpandedItemsChange?: (items: ExplorerNode[]) => void
+  selectedItems?: ExplorerNode[]
+  onSelectedItemsChange?: (items: ExplorerNode[]) => void
 }
 
-export default function Tree({ items, ...others }: TreeProps) {
+export default function Tree({
+  items,
+  filteredItems = items,
+  expandedItems = [],
+  selectedItems = [],
+  onExpandedItemsChange,
+  onSelectedItemsChange,
+  ...others
+}: TreeProps) {
   const dndId = useId()
+  const sortableId = useId()
 
-  const { contextValue } = useCreateTree(items, getExplorerNodeChildren, {
-    expanded: [],
-    selected: [],
-    filtered: [],
-  })
+  const { contextValue } = useCreateTree(
+    items,
+    getExplorerNodeId,
+    getExplorerNodeChildren,
+    {
+      filteredItems,
+      expandedItems,
+      onExpandedItemsChange,
+      selectedItems,
+      onSelectedItemsChange,
+    }
+  )
 
   const childNodes = items.map((item) => (
     <TreeItem key={getExplorerNodeId(item)} item={item} />
@@ -57,10 +79,11 @@ export default function Tree({ items, ...others }: TreeProps) {
           setActive(null)
         }}
       >
-        {/* need this top level to be droppable */}
-        <ul role="tree" {...others}>
-          {childNodes}
-        </ul>
+        <SortableContext id={sortableId} items={items.map(getExplorerNodeId)}>
+          <ul role="tree" {...others}>
+            {childNodes}
+          </ul>
+        </SortableContext>
         {createPortal(
           <DragOverlay>
             {activeItem ? <TreeItemTitle item={activeItem} /> : null}

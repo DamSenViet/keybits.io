@@ -1,4 +1,4 @@
-import { AriaAttributes, AriaRole, HTMLAttributes } from 'react'
+import { AriaAttributes, AriaRole, HTMLAttributes, Key } from 'react'
 
 export interface TreeItemA11yAttributes
   extends Partial<AriaAttributes>,
@@ -7,8 +7,11 @@ export interface TreeItemA11yAttributes
 }
 
 export interface TreeContextValue<TItem> {
-  uniqExpanded: Set<TItem>
-  uniqSelected: Set<TItem>
+  getItemId: (item: TItem) => Key
+  getItemChildren: (item: TItem) => TItem[] | undefined
+  setExpandedItems: (items: TItem[]) => void
+  uniqExpandedItems: Set<TItem>
+  uniqSelectedItems: Set<TItem>
   nodeToParent: Map<TItem, TItem | undefined>
   nodeToChildren: Map<TItem, TItem[] | undefined>
   nodeToFilteredChildren: Map<TItem, TItem[] | undefined>

@@ -17,7 +17,7 @@ const DragHandle = forwardRef<HTMLButtonElement, DragHandleProps>(
         {...attributes}
         {...listeners}
       >
-        <GripVertical className="stroke-gray-500" size={16} />
+        <GripVertical className="stroke-muted-foreground" size={16} />
       </button>
     )
   }
