@@ -11,27 +11,27 @@ export interface Options<TItem> {
   multiSelectable?: boolean
   selected?: TItem[]
   onSelectedChange?: (item: TItem[]) => void
-  // filters
   filtered?: TItem[]
 }
 
 export default function useCreateTree<TItem>(
   items: TItem[],
   getChildren: (item: TItem) => TItem[] | undefined,
-  options: Partial<Options<TItem>> = {
-    selected: [],
-    expanded: [],
-    filtered: [],
-    multiSelectable: false,
-  }
+  {
+    selected,
+    expanded,
+    // filtered should be a flattened set of items
+    filtered = items,
+    multiSelectable = false,
+  }: Partial<Options<TItem>>
 ) {
   // need to keep track of last focused
   // by default we should focus the first element
   const focused = useUncontrolled({ finalValue: undefined })
 
   const [resolvedExpanded, setResolvedExpanded] = useUncontrolled({
-    value: options.expanded ?? [],
-    onChange: options.onExpandedChange,
+    value: expanded ?? [],
+    // onChange: onExpandedChange,
   })
 
   const uniqExpanded = useMemo(
@@ -40,8 +40,8 @@ export default function useCreateTree<TItem>(
   )
 
   const [resolvedSelected, setResolvedSelected] = useUncontrolled({
-    value: options.selected ?? [],
-    onChange: options.onSelectedChange,
+    value: selected ?? [],
+    // onChange: onSelectedChange,
   })
 
   const uniqSelected = useMemo(
@@ -49,19 +49,28 @@ export default function useCreateTree<TItem>(
     [resolvedSelected]
   )
 
-  const [nodeToParent, nodeToChildren, nodeToDepth] = useMemo(() => {
-    const nodeToParent = new Map<TItem, TItem | undefined>()
-    const nodeToChildren = new Map<TItem, TItem[] | undefined>()
-    const nodeToDepth = new Map<TItem, number>()
+  const [nodeToParent, nodeToChildren, nodeToFilteredChildren, nodeToDepth] =
+    useMemo(() => {
+      const nodeToParent = new Map<TItem, TItem | undefined>()
+      const nodeToChildren = new Map<TItem, TItem[] | undefined>()
+      const nodeToFilteredChildren = new Map<TItem, TItem[] | undefined>()
+      const nodeToDepth = new Map<TItem, number>()
 
-    each(items, getChildren, (node, parent, { depth }) => {
-      nodeToParent.set(node, parent)
-      nodeToChildren.set(node, getChildren(node))
-      nodeToDepth.set(node, depth)
-    })
+      each(items, getChildren, (node, parent, { depth }) => {
+        nodeToParent.set(node, parent)
+        nodeToChildren.set(node, getChildren(node))
+        // nodeToFilteredChildren.set(node)
+        nodeToDepth.set(node, depth)
+      })
 
-    return [nodeToParent, nodeToChildren, nodeToDepth]
-  }, [items, getChildren])
+      return [
+        nodeToParent,
+        nodeToChildren,
+        nodeToFilteredChildren,
+        nodeToDepth,
+        filtered,
+      ]
+    }, [items, getChildren])
 
   const nodeToA11y = useMemo(() => {
     const nodeToA11y = new Map<TItem, TreeItemA11yAttributes>()
@@ -71,8 +80,7 @@ export default function useCreateTree<TItem>(
         'aria-selected': uniqSelected.has(node),
         tabIndex: node === focused ? -1 : 0,
         'aria-setsize': nodeToChildren.get(node)!.length,
-        'aria-posinset':
-          nodeToChildren.get(nodeToParent.get(node)!)!.indexOf(node) + 1,
+        'aria-posinset': 0,
         'aria-level': nodeToDepth.get(node)!,
       }
       nodeToA11y.set(node, a11y)
@@ -81,8 +89,11 @@ export default function useCreateTree<TItem>(
   }, [nodeToParent, nodeToChildren, nodeToDepth, uniqExpanded])
 
   const contextValue: TreeContextValue<TItem> = {
-    nodeToChildren,
+    uniqExpanded,
+    uniqSelected,
     nodeToParent,
+    nodeToChildren,
+    nodeToFilteredChildren,
     nodeToDepth,
     nodeToA11y,
   }
@@ -90,7 +101,7 @@ export default function useCreateTree<TItem>(
   // produce aria for root list
   const rootA11y: HTMLAttributes<HTMLUListElement> = {
     role: 'tree',
-    'aria-multiselectable': options.multiSelectable,
+    'aria-multiselectable': multiSelectable,
   }
 
   return {

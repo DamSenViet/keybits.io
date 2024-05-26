@@ -1,5 +1,7 @@
 import { isArray } from 'lodash'
 
+type TraversalStrategy = 'bfs' | 'preorder' | 'inorder' | 'postorder'
+
 interface TreeIterCtx<TNode> {
   depth: number
 }
@@ -12,7 +14,7 @@ export const each = <TItem>(
   item: TItem | TItem[],
   getChildren: (item: TItem) => TItem[] | undefined,
   callback: TreeIteratee<TItem, void>,
-  strategy: 'dfs' | 'bfs' = 'dfs'
+  strategy: TraversalStrategy = 'preorder'
 ) => {
   // track next node's self, parent, and depth
   const queue: [TItem, TItem | undefined, number][] = (
@@ -33,7 +35,7 @@ export const find = <TItem>(
   items: TItem | TItem[],
   getChildren: (item: TItem) => TItem[],
   callback: TreeIteratee<TItem, boolean>,
-  strategy: 'dfs' | 'bfs' = 'bfs'
+  strategy: TraversalStrategy = 'bfs'
 ) => {
   const queue: [TItem, TItem | undefined, number][] = (
     isArray(items) ? items : [items]
@@ -51,6 +53,12 @@ export const find = <TItem>(
 
 // take the tree, and generate a list of nodes
 export const flattenTree = <TItem>(
-  item: TItem | TItem[],
-  getChildren: (item: TItem) => TItem[]
-) => {}
+  items: TItem | TItem[],
+  getChildren: (item: TItem) => TItem[],
+  strategy: TraversalStrategy = 'preorder'
+) => {
+  // console.log
+  const flattenedTree: TItem[] = []
+  each(items, getChildren, (item) => flattenedTree.push(item), strategy)
+  return flattenedTree
+}
