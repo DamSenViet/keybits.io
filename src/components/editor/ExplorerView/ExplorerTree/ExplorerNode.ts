@@ -1,11 +1,7 @@
-import { hierarchy, HierarchyNode } from 'd3-hierarchy'
-
 interface BaseExplorerNode {
   name: string
   children?: BaseExplorerNode[]
 }
-
-export type ExplorerHierarchyNode = HierarchyNode<ExplorerNode>
 
 export type ExplorerNode = BaseExplorerNode
 

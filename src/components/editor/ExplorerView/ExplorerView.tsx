@@ -10,7 +10,8 @@ import {
 import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import ExplorerTree, { ExplorerNode } from './ExplorerTree'
+import { ExplorerNode } from './ExplorerTree/ExplorerNode'
+import Tree from './ExplorerTree/Tree'
 
 const tree: ExplorerNode = {
   name: 'Root',
@@ -108,7 +109,7 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <ExplorerTree className="relative" items={filteredTree[0].children!} />
+        <Tree className="relative" items={filteredTree[0].children!} />
       </div>
     )
   }
