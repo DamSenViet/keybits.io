@@ -5,24 +5,26 @@ import { ChevronDown, File, Folder, FolderOpen } from 'lucide-react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
 import DragHandle from './DragHandle'
-import DropIndicator, { DropPosition } from './DropIndicator'
+import DropIndicator from './DropIndicator'
 import {
   ExplorerNode,
   getExplorerNodeChildren,
   getExplorerNodeId,
 } from './ExplorerNode'
 import TreeContext from './TreeContext'
-
-const TREE_INDENT_PX = 16
+import { TREE_INDENT_PX } from './constants'
+import { InsertPosition, getInsertPosition } from './utils'
 
 export interface TreeItemTitleProps {
   item: ExplorerNode
   showChevron?: boolean
+  draggableOverlay?: boolean
 }
 
 export default function TreeItemTitle({
   item,
   showChevron = false,
+  draggableOverlay = false,
 }: TreeItemTitleProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
@@ -33,8 +35,6 @@ export default function TreeItemTitle({
   const Icon = isParent ? (isExpanded ? FolderOpen : Folder) : File
   const resolvedShowChevron = isParent && showChevron
 
-  const insertPosition: DropPosition = 'after'
-
   const {
     isDragging,
     attributes,
@@ -43,8 +43,14 @@ export default function TreeItemTitle({
     setActivatorNodeRef,
   } = useDraggable({ id: itemId })
 
-  const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
-    id: itemId,
+  // droppable for inserts before/after
+  const {
+    setNodeRef: setDroppableNodeRef,
+    isOver,
+    active,
+    over,
+  } = useDroppable({
+    id: `${itemId}`,
   })
 
   // conditionally set the droppable ref
@@ -54,6 +60,11 @@ export default function TreeItemTitle({
     ...(isDroppable ? [setDroppableNodeRef] : []),
     setDraggableNodeRef
   )
+
+  // do the calculation for insertPosition
+
+  const insertPosition: InsertPosition =
+    active && over ? getInsertPosition(active, over) : 'before'
 
   return (
     <div
@@ -68,8 +79,14 @@ export default function TreeItemTitle({
     >
       {/* indent */}
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
-      {/* drop indicator */}
+      {/* drop indicators */}
       <DropIndicator position={insertPosition} visible={isOver} depth={depth} />
+      {/* debugging item center indicators */}
+      {/* <div
+        className="absolute w-full bg-red-400 bg-opacity-30"
+        style={{ height: 2 }}
+      /> */}
+
       <button
         className={cn(
           'shrink-0 mr-1 hover:bg-input bg-opacity-50 p-1 rounded-full',
@@ -92,13 +109,15 @@ export default function TreeItemTitle({
           {item.name}
         </div>
       </div>
-      <div className="flex-none min-w-0">
-        <DragHandle
-          ref={setActivatorNodeRef}
-          attributes={attributes}
-          listeners={listeners}
-        />
-      </div>
+      {!draggableOverlay && (
+        <div className="flex-none min-w-0 touch-none">
+          <DragHandle
+            ref={setActivatorNodeRef}
+            attributes={attributes}
+            listeners={listeners}
+          />
+        </div>
+      )}
       <div className="flex-none flex">
         {/* hover visible actions */}
         {/* <EyeOff className="h-4 w-4 mr-1 block group-hover:hidden" /> */}

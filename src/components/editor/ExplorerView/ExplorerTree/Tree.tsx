@@ -1,21 +1,22 @@
 'use client'
 
-import { useId, useMemo, useState, ComponentProps } from 'react'
+import { useId, useMemo, useState, ComponentProps, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import {
   DndContext,
   DragOverlay,
-  KeyboardSensor,
   UniqueIdentifier,
-  useSensor,
-  useSensors,
-  closestCenter,
+  closestCorners,
   DragStartEvent,
   DragEndEvent,
   DragCancelEvent,
-  MouseSensor,
+  DragMoveEvent,
+  useSensors,
+  useSensor,
+  PointerSensor,
+  KeyboardSensor,
+  TouchSensor,
 } from '@dnd-kit/core'
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
 import {
@@ -26,6 +27,7 @@ import {
 import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
 import TreeItemTitle from './TreeItemTitle'
+import { getInsertPosition } from './utils'
 
 interface TreeProps extends ComponentProps<'ul'> {
   items: ExplorerNode[]
@@ -60,10 +62,15 @@ export default function Tree({
     }
   )
 
-  const childNodes = items.map((item) => (
-    <TreeItem key={getExplorerNodeId(item)} item={item} />
-  ))
+  const childNodes = useMemo(
+    () =>
+      items.map((item) => (
+        <TreeItem key={getExplorerNodeId(item)} item={item} />
+      )),
+    [items, getExplorerNodeId]
+  )
 
+  const [offsetLeft, setOffsetLeft] = useState(0)
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const activeItem = useMemo(
     () =>
@@ -75,37 +82,53 @@ export default function Tree({
     [activeId]
   )
 
-  const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+  const handleDragStart = useCallback(
+    ({ active }: DragStartEvent) => {
+      setActiveId(active.id)
+    },
+    [setActiveId]
   )
 
-  const handleDragStart = ({ active }: DragStartEvent) => {
-    setActiveId(active.id)
-  }
+  const handleDragMove = useCallback(
+    ({ delta }: DragMoveEvent) => {
+      setOffsetLeft(delta.x)
+    },
+    [setOffsetLeft]
+  )
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (over) {
-      if (active.id !== over.id) {
-        // update the tree of items
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor),
+    useSensor(TouchSensor)
+  )
+
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent) => {
+      if (over) {
+        if (active.id !== over.id) {
+          const insertPosition = getInsertPosition(active, over)
+        }
       }
-    }
-    setActiveId(null)
-  }
+      setActiveId(null)
+    },
+    [setActiveId]
+  )
 
-  const handleDragCancel = (event: DragCancelEvent) => {
-    setActiveId(null)
-  }
+  const handleDragCancel = useCallback(
+    (event: DragCancelEvent) => {
+      setActiveId(null)
+    },
+    [setActiveId]
+  )
 
   return (
     <TreeContext.Provider value={contextValue}>
       <DndContext
         id={dndId}
         sensors={sensors}
-        collisionDetection={closestCenter}
+        // collisionDetection={closestCorners}
         onDragStart={handleDragStart}
+        onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
