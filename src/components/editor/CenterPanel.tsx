@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Test from './DnDTest/Test'
 import { SortableList } from './SortableList'
 
 const characters = ['A', 'B', 'C', 'D', 'E']
@@ -26,7 +25,6 @@ export default function CenterPanel() {
           </SortableList.Item>
         )}
       />
-      <Test />
     </div>
   )
 }
