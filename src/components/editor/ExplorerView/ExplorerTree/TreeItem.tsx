@@ -1,6 +1,4 @@
-import { useSortable } from '@dnd-kit/sortable'
 import { useTreeItem } from '@/components/headless-ui/tree'
-import { cn } from '@/lib/utils'
 import {
   ExplorerNode,
   getExplorerNodeChildren,
@@ -15,28 +13,11 @@ interface TreeItemProps {
 }
 
 export default function TreeItem({ item }: TreeItemProps) {
-  const { isExpanded, depth, attributes, toggleExpanded } = useTreeItem(
-    TreeContext,
-    item
-  )
-  const showIndentGuide = false
-
-  const { setNodeRef, isOver, active, transform } = useSortable({
-    id: getExplorerNodeId(item),
-  })
-
-  const rootStyle = {
-    transform: transform
-      ? `translate(${transform.x}px, ${transform.y}px)`
-      : undefined,
-  }
-
-  // should note that droppable cannot be any of the active's descendants
-  const isDroppable = active?.id !== getExplorerNodeId(item)
-  const showDropIndicator = isDroppable && isOver
-
   const childItems = getExplorerNodeChildren(item)
   const hasChildren = Boolean(childItems)
+
+  const { isExpanded, depth, attributes } = useTreeItem(TreeContext, item)
+  const showIndentGuide = false
 
   const childTreeItems = getExplorerNodeChildren(item)?.map((item) => (
     <TreeItem
@@ -47,17 +28,12 @@ export default function TreeItem({ item }: TreeItemProps) {
   ))
 
   return (
-    <li
-      {...(isDroppable ? { ref: setNodeRef } : {})}
-      className={cn('rounded-sm', showDropIndicator ? 'bg-green-200' : null)}
-      // style={rootStyle}
-      {...attributes}
-    >
+    <li {...attributes}>
       <TreeItemTitle item={item} showChevron />
       {hasChildren && (
         <ul className="relative" role="group">
           {showIndentGuide && (
-            <div /*{ indent guide } */
+            <div
               className="absolute top-0 h-full border-l-2 border-input"
               style={{ marginLeft: `${depth * 8 + 6}px` }}
             />

@@ -1,13 +1,19 @@
-import { CSSProperties } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
+import { useDroppable } from '@dnd-kit/core'
+import { useDraggable } from '@dnd-kit/core'
+import { mergeRefs } from '@mantine/hooks'
 import { ChevronDown, File, Folder, FolderOpen } from 'lucide-react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
 import DragHandle from './DragHandle'
-import { ExplorerNode, getExplorerNodeId } from './ExplorerNode'
+import DropIndicator, { DropPosition } from './DropIndicator'
+import {
+  ExplorerNode,
+  getExplorerNodeChildren,
+  getExplorerNodeId,
+} from './ExplorerNode'
 import TreeContext from './TreeContext'
 
-const TREE_INDENT_PX = 8
+const TREE_INDENT_PX = 16
 
 export interface TreeItemTitleProps {
   item: ExplorerNode
@@ -19,45 +25,55 @@ export default function TreeItemTitle({
   showChevron = false,
 }: TreeItemTitleProps) {
   // determine whether we're expanded
+  const itemId = getExplorerNodeId(item)
   const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
 
-  const children: [] | undefined = []
-  const Icon = children ? (isExpanded ? FolderOpen : Folder) : File
+  const children = getExplorerNodeChildren(item)
+  const isParent = Boolean(children)
+  const Icon = isParent ? (isExpanded ? FolderOpen : Folder) : File
+  const resolvedShowChevron = isParent && showChevron
+
+  const insertPosition: DropPosition = 'after'
 
   const {
-    active,
     isDragging,
     attributes,
-    transform,
     listeners,
-    setNodeRef,
-    setDraggableNodeRef,
+    setNodeRef: setDraggableNodeRef,
     setActivatorNodeRef,
-  } = useSortable({ id: getExplorerNodeId(item) })
+  } = useDraggable({ id: itemId })
 
-  const rootStyle: CSSProperties = {
-    opacity: isDragging ? 0.4 : 1,
-    // transform: transform
-    //   ? `translate(${transform.x}px, ${transform.y}px)`
-    //   : undefined,
-  }
+  const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
+    id: itemId,
+  })
+
+  // conditionally set the droppable ref
+  // if we have one active, no descedants allowed to be droppables
+  const isDroppable = true
+  const mergedRefs = mergeRefs(
+    ...(isDroppable ? [setDroppableNodeRef] : []),
+    setDraggableNodeRef
+  )
 
   return (
     <div
-      ref={setDraggableNodeRef}
+      ref={mergedRefs}
       className={cn(
+        'relative rounded-sm',
         'flex flex-row items-center justify',
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
-        'group'
+        'group',
+        isDragging ? 'opacity-40' : null
       )}
-      style={rootStyle}
     >
       {/* indent */}
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
+      {/* drop indicator */}
+      <DropIndicator position={insertPosition} visible={isOver} depth={depth} />
       <button
         className={cn(
           'shrink-0 mr-1 hover:bg-input bg-opacity-50 p-1 rounded-full',
-          showChevron ? 'visible' : 'invisible'
+          resolvedShowChevron ? 'visible' : 'invisible'
         )}
         aria-label="expand"
         onClick={toggleExpanded}

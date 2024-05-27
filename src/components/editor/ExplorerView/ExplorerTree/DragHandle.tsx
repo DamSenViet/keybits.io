@@ -12,7 +12,7 @@ const DragHandle = forwardRef<HTMLButtonElement, DragHandleProps>(
   ({ attributes, listeners }, ref) => {
     return (
       <button
-        className="hover:bg-input bg-opacity-50  rounded-md py-2 px-1 mr-2"
+        className="hover:bg-input rounded-md py-2 px-1 mr-2"
         ref={ref}
         {...attributes}
         {...listeners}

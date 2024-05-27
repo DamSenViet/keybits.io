@@ -17,26 +17,26 @@ const tree: ExplorerNode = {
   name: 'Root',
   children: [
     {
-      name: 'Folder A',
+      name: 'Item A',
       children: [],
     },
     {
-      name: 'Folder B',
+      name: 'Item B',
       children: [
         {
-          name: 'Nested In B',
+          name: 'Item C',
         },
         {
-          name: 'Sibling of Nested in  B',
+          name: 'Item D',
           children: [
             {
-              name: 'Deeply Nested',
+              name: 'Item E',
             },
             {
-              name: 'Super duper long name in a nested item',
+              name: 'Item F',
               children: [
                 {
-                  name: 'DEEEPLY NESTED AND VERY VERY VERY LONG',
+                  name: 'Item G',
                 },
               ],
             },
@@ -45,11 +45,11 @@ const tree: ExplorerNode = {
       ],
     },
     {
-      name: 'Folder C',
+      name: 'Item H',
       children: [],
     },
     {
-      name: 'File D',
+      name: 'Item I',
     },
   ],
 }

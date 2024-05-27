@@ -5,7 +5,6 @@ import { TreeContextValue } from '../types'
 export default function createTreeContext<TItem>() {
   const TreeContext = createContext<TreeContextValue<TItem>>({
     getItemId: () => '',
-    getItemChildren: () => [],
     setExpandedItems: noop,
     uniqExpandedItems: new Set(),
     uniqSelectedItems: new Set(),

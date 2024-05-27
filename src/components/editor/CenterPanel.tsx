@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-
-// import Test from './DnDTest/Test'
-// import { SortableList } from './SortableList'
+import Test from './DnDTest/Test'
+import { SortableList } from './SortableList'
 
 const characters = ['A', 'B', 'C', 'D', 'E']
 
@@ -16,7 +15,7 @@ export default function CenterPanel() {
 
   return (
     <div className="grow p-16">
-      {/* <SortableList
+      <SortableList
         items={letters}
         onChange={setLetters}
         getId={(item) => item.id}
@@ -27,7 +26,7 @@ export default function CenterPanel() {
           </SortableList.Item>
         )}
       />
-      <Test /> */}
+      <Test />
     </div>
   )
 }

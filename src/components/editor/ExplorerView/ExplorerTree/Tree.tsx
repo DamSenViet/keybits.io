@@ -2,8 +2,20 @@
 
 import { useId, useMemo, useState, ComponentProps } from 'react'
 import { createPortal } from 'react-dom'
-import { Active, DndContext, DragOverlay, pointerWithin } from '@dnd-kit/core'
-import { SortableContext } from '@dnd-kit/sortable'
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  UniqueIdentifier,
+  useSensor,
+  useSensors,
+  closestCenter,
+  DragStartEvent,
+  DragEndEvent,
+  DragCancelEvent,
+  MouseSensor,
+} from '@dnd-kit/core'
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
 import {
@@ -34,7 +46,6 @@ export default function Tree({
   ...others
 }: TreeProps) {
   const dndId = useId()
-  const sortableId = useId()
 
   const { contextValue } = useCreateTree(
     items,
@@ -53,37 +64,54 @@ export default function Tree({
     <TreeItem key={getExplorerNodeId(item)} item={item} />
   ))
 
-  const [active, setActive] = useState<Active | null>(null)
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const activeItem = useMemo(
     () =>
       find(
         items,
         getExplorerNodeChildren,
-        (item) => getExplorerNodeId(item) === active?.id
+        (item) => getExplorerNodeId(item) === activeId
       ),
-    [active]
+    [activeId]
   )
+
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveId(active.id)
+  }
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (over) {
+      if (active.id !== over.id) {
+        // update the tree of items
+      }
+    }
+    setActiveId(null)
+  }
+
+  const handleDragCancel = (event: DragCancelEvent) => {
+    setActiveId(null)
+  }
 
   return (
     <TreeContext.Provider value={contextValue}>
       <DndContext
         id={dndId}
-        collisionDetection={pointerWithin}
-        onDragStart={({ active }) => {
-          setActive(active)
-        }}
-        onDragEnd={() => {
-          setActive(null)
-        }}
-        onDragCancel={() => {
-          setActive(null)
-        }}
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
       >
-        <SortableContext id={sortableId} items={items.map(getExplorerNodeId)}>
-          <ul role="tree" {...others}>
-            {childNodes}
-          </ul>
-        </SortableContext>
+        <ul role="tree" {...others}>
+          {childNodes}
+        </ul>
         {createPortal(
           <DragOverlay>
             {activeItem ? <TreeItemTitle item={activeItem} /> : null}

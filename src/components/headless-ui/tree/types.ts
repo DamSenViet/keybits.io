@@ -8,7 +8,6 @@ export interface TreeItemA11yAttributes
 
 export interface TreeContextValue<TItem> {
   getItemId: (item: TItem) => Key
-  getItemChildren: (item: TItem) => TItem[] | undefined
   setExpandedItems: (items: TItem[]) => void
   uniqExpandedItems: Set<TItem>
   uniqSelectedItems: Set<TItem>

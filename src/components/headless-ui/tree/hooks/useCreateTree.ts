@@ -39,10 +39,6 @@ export default function useCreateTree<TItem>(
     onChange: onExpandedItemsChange,
   })
 
-  useEffect(() => {
-    console.log(resolvedExpanded)
-  }, [resolvedExpanded])
-
   const uniqExpandedItems = useMemo(
     () => new Set<TItem>(resolvedExpanded),
     [resolvedExpanded]
@@ -96,7 +92,6 @@ export default function useCreateTree<TItem>(
 
   const contextValue: TreeContextValue<TItem> = {
     getItemId: getId,
-    getItemChildren: getChildren,
     setExpandedItems: setResolvedExpanded,
     uniqExpandedItems,
     uniqSelectedItems,

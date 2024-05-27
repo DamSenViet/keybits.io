@@ -12,6 +12,7 @@ import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import './SortableList.css'
 import { DragHandle, SortableItem, SortableOverlay } from './components'
@@ -67,7 +68,10 @@ export function SortableList<T>({
         setActive(null)
       }}
     >
-      <SortableContext items={items.map(getId)}>
+      <SortableContext
+        items={items.map(getId)}
+        strategy={verticalListSortingStrategy}
+      >
         <ul className="SortableList" role="application">
           {items.map((item) => (
             <React.Fragment key={getId(item)}>
