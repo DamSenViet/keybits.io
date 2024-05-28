@@ -1,10 +1,10 @@
+import { MouseEvent, PointerEvent } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
 import { ChevronDown, File, Folder, FolderOpen } from 'lucide-react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
-import DragHandle from './DragHandle'
 import DropIndicator from './DropIndicator'
 import {
   ExplorerNode,
@@ -66,6 +66,11 @@ export default function TreeItemTitle({
   const insertPosition: InsertPosition =
     active && over ? getInsertPosition(active, over) : 'before'
 
+  const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+    toggleExpanded()
+  }
+
   return (
     <div
       ref={mergedRefs}
@@ -76,6 +81,8 @@ export default function TreeItemTitle({
         'group',
         isDragging ? 'opacity-40' : null
       )}
+      {...attributes}
+      {...listeners}
     >
       {/* indent */}
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
@@ -93,7 +100,7 @@ export default function TreeItemTitle({
           resolvedShowChevron ? 'visible' : 'invisible'
         )}
         aria-label="expand"
-        onClick={toggleExpanded}
+        onPointerDown={handleExpand}
       >
         <ChevronDown
           className={cn(
@@ -109,15 +116,6 @@ export default function TreeItemTitle({
           {item.name}
         </div>
       </div>
-      {!draggableOverlay && (
-        <div className="flex-none min-w-0 touch-none">
-          <DragHandle
-            ref={setActivatorNodeRef}
-            attributes={attributes}
-            listeners={listeners}
-          />
-        </div>
-      )}
       <div className="flex-none flex">
         {/* hover visible actions */}
         {/* <EyeOff className="h-4 w-4 mr-1 block group-hover:hidden" /> */}
