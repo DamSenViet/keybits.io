@@ -1,7 +1,7 @@
 'use client'
 
 import { useId, useMemo, useState, ComponentProps, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+import dynamic from 'next/dynamic'
 import {
   DndContext,
   DragOverlay,
@@ -28,6 +28,10 @@ import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
 import TreeItemTitle from './TreeItemTitle'
 import { getInsertPosition } from './utils'
+
+const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
+  ssr: false,
+})
 
 interface TreeProps extends ComponentProps<'ul'> {
   items: ExplorerNode[]
@@ -135,12 +139,7 @@ export default function Tree({
         <ul role="tree" {...others}>
           {childNodes}
         </ul>
-        {createPortal(
-          <DragOverlay>
-            {activeItem ? <TreeItemTitle item={activeItem} /> : null}
-          </DragOverlay>,
-          document.body
-        )}
+        <DraggableOverlay item={activeItem} />
       </DndContext>
     </TreeContext.Provider>
   )
