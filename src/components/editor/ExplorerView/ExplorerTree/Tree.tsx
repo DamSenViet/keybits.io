@@ -4,9 +4,7 @@ import { useId, useMemo, useState, ComponentProps, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import {
   DndContext,
-  DragOverlay,
   UniqueIdentifier,
-  closestCorners,
   DragStartEvent,
   DragEndEvent,
   DragCancelEvent,
@@ -26,7 +24,6 @@ import {
 } from './ExplorerNode'
 import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
-import TreeItemTitle from './TreeItemTitle'
 import { getInsertPosition } from './utils'
 
 const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {

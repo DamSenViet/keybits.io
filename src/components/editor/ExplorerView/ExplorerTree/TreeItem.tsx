@@ -5,7 +5,7 @@ import {
   getExplorerNodeId,
 } from './ExplorerNode'
 import TreeContext from './TreeContext'
-import TreeItemTitle from './TreeItemTitle'
+import TreeItemHeader from './TreeItemHeader'
 
 interface TreeItemProps {
   item: ExplorerNode
@@ -29,7 +29,7 @@ export default function TreeItem({ item }: TreeItemProps) {
 
   return (
     <li {...attributes}>
-      <TreeItemTitle item={item} showChevron />
+      <TreeItemHeader item={item} showChevron />
       {hasChildren && (
         <ul className="relative" role="group">
           {showIndentGuide && (

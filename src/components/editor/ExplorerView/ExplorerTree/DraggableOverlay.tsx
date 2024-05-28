@@ -5,7 +5,7 @@ import {
   defaultDropAnimationSideEffects,
 } from '@dnd-kit/core'
 import { ExplorerNode } from './ExplorerNode'
-import TreeItemTitle from './TreeItemTitle'
+import TreeItemHeader from './TreeItemHeader'
 
 export interface DraggableOverlayProps {
   item?: ExplorerNode
@@ -24,7 +24,7 @@ export default function DraggableOverlay({ item }: DraggableOverlayProps) {
     <>
       {createPortal(
         <DragOverlay dropAnimation={dropAnimation}>
-          {item ? <TreeItemTitle item={item} /> : null}
+          {item ? <TreeItemHeader item={item} /> : null}
         </DragOverlay>,
         document.body
       )}
