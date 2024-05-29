@@ -1,4 +1,4 @@
-import { MouseEvent, PointerEvent } from 'react'
+import { PointerEvent } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
@@ -18,13 +18,11 @@ import { InsertPosition, getInsertPosition } from './utils'
 export interface TreeItemTitleProps {
   item: ExplorerNode
   showChevron?: boolean
-  draggableOverlay?: boolean
 }
 
 export default function TreeItemTitle({
   item,
   showChevron = false,
-  draggableOverlay = false,
 }: TreeItemTitleProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
@@ -40,7 +38,6 @@ export default function TreeItemTitle({
     attributes,
     listeners,
     setNodeRef: setDraggableNodeRef,
-    setActivatorNodeRef,
   } = useDraggable({ id: itemId })
 
   // droppable for inserts before/after
