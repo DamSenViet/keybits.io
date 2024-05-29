@@ -6,6 +6,7 @@ import {
   forwardRef,
   useMemo,
   useCallback,
+  Key,
 } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
 import { Input } from '@/components/ui/input'
@@ -54,12 +55,38 @@ const tree: ExplorerNode = {
   ],
 }
 
+const filterTree = (
+  nodes: ExplorerNode[],
+  predicate: ListIterator<ExplorerNode, boolean>
+) => {
+  const getNodes = (
+    prev: ExplorerNode[],
+    curr: ExplorerNode,
+    index: number,
+    list: List<ExplorerNode>
+  ) => {
+    if (predicate(curr, index, list)) {
+      prev.push(curr)
+      return prev
+    }
+    if (curr.children) {
+      const nodes = reduce(curr.children, getNodes, [])
+      if (nodes.length) prev.push({ ...curr, children: nodes })
+    }
+    return prev
+  }
+  return reduce(nodes, getNodes, [])
+}
+
 interface ExplorerViewProps {
   className?: string
 }
 
 const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
   ({ className }, ref) => {
+    const [root, setRoot] = useState(tree)
+    const [expandedIds, setExpandedIds] = useState<Key[]>([])
+    const [selectedIds, setSelectedIds] = useState<Key[]>([])
     const [search, setSearch] = useState('')
 
     const searchPredicate = useCallback(
@@ -70,32 +97,9 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
       [search]
     )
 
-    const filterTree = (
-      nodes: ExplorerNode[],
-      predicate: ListIterator<ExplorerNode, boolean>
-    ) => {
-      const getNodes = (
-        prev: ExplorerNode[],
-        curr: ExplorerNode,
-        index: number,
-        list: List<ExplorerNode>
-      ) => {
-        if (predicate(curr, index, list)) {
-          prev.push(curr)
-          return prev
-        }
-        if (curr.children) {
-          const nodes = reduce(curr.children, getNodes, [])
-          if (nodes.length) prev.push({ ...curr, children: nodes })
-        }
-        return prev
-      }
-      return reduce(nodes, getNodes, [])
-    }
-
     const filteredTree = useMemo(
-      () => filterTree([tree] ?? [], searchPredicate),
-      [tree, searchPredicate]
+      () => filterTree([root] ?? [], searchPredicate),
+      [root, searchPredicate]
     )
 
     const handleSearch: FormEventHandler<HTMLInputElement> = (event) =>
@@ -109,7 +113,14 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
           onInput={handleSearch}
           value={search}
         />
-        <Tree className="relative" items={filteredTree[0].children!} />
+        <Tree
+          className="relative"
+          items={root.children!}
+          expandedIds={expandedIds}
+          onExpandedIdsChange={setExpandedIds}
+          selectedIds={selectedIds}
+          onSelectedIdsChange={setSelectedIds}
+        />
       </div>
     )
   }

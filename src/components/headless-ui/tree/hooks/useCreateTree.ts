@@ -1,6 +1,6 @@
-import { useMemo, HTMLAttributes, Key, useEffect } from 'react'
+import { useMemo, HTMLAttributes, Key } from 'react'
 import { useUncontrolled } from '@mantine/hooks'
-import { noop } from 'lodash'
+import { isUndefined, negate, pickBy } from 'lodash'
 import { TreeContextValue, TreeItemA11yAttributes } from '../types'
 import { each } from '../utils/traversal'
 
@@ -8,12 +8,14 @@ export interface Options<TItem> {
   // not sure if we want to make this a subset or not...
   filteredItems?: TItem[]
   // expansion
-  expandedItems?: TItem[]
-  onExpandedItemsChange?: (item: TItem[]) => void
+  expandedIds?: Key[]
+  defaultExpandedIds?: Key[]
+  onExpandedIdsChange?: (ids: Key[]) => void
   // selection
   multiSelectable?: boolean
-  selectedItems?: TItem[]
-  onSelectedItemsChange?: (item: TItem[]) => void
+  selectedIds?: Key[]
+  defaultSelectedIds?: Key[]
+  onSelectedIdsChange?: (ids: Key[]) => void
 }
 
 export default function useCreateTree<TItem>(
@@ -22,98 +24,160 @@ export default function useCreateTree<TItem>(
   getChildren: (item: TItem) => TItem[] | undefined,
   {
     filteredItems = items,
-    expandedItems,
-    onExpandedItemsChange,
+    expandedIds,
+    defaultExpandedIds,
+    onExpandedIdsChange,
     multiSelectable = false,
-    selectedItems,
-    onSelectedItemsChange,
+    selectedIds,
+    defaultSelectedIds,
+    onSelectedIdsChange,
   }: Partial<Options<TItem>>
 ) {
   // need to keep track of last focused
   // by default we should focus the first element
-  const focused = useUncontrolled({ finalValue: undefined })
+  const [focusedId] = useUncontrolled<Key>({ finalValue: '' })
 
-  const [resolvedExpanded, setResolvedExpanded] = useUncontrolled<TItem[]>({
-    // value: expandedItems,
-    finalValue: [],
-    onChange: onExpandedItemsChange,
-  })
-
-  const uniqExpandedItems = useMemo(
-    () => new Set<TItem>(resolvedExpanded),
-    [resolvedExpanded]
+  const [resolvedExpandedIds, setResolvedExpandedIds] = useUncontrolled<Key[]>(
+    pickBy(
+      {
+        value: expandedIds,
+        defaultValue: defaultExpandedIds,
+        finalValue: [] as Key[],
+        onChange: onExpandedIdsChange,
+      },
+      negate(isUndefined)
+    )
   )
 
-  const [resolvedSelected, setResolvedSelected] = useUncontrolled({
-    value: selectedItems,
-    onChange: onSelectedItemsChange,
-  })
-
-  const uniqSelectedItems = useMemo(
-    () => new Set<TItem>(resolvedSelected),
-    [resolvedSelected]
+  const uniqExpandedIds = useMemo(
+    () => new Set(resolvedExpandedIds),
+    [resolvedExpandedIds]
   )
 
-  const [nodeToParent, nodeToChildren, nodeToFilteredChildren, nodeToDepth] =
-    useMemo(() => {
-      const nodeToParent = new Map<TItem, TItem | undefined>()
-      const nodeToChildren = new Map<TItem, TItem[] | undefined>()
-      const nodeToFilteredChildren = new Map<TItem, TItem[] | undefined>()
-      const nodeToDepth = new Map<TItem, number>()
+  const [resolvedSelectedIds, setResolvedSelectedIds] = useUncontrolled<Key[]>(
+    pickBy(
+      {
+        value: selectedIds,
+        defaultValue: defaultSelectedIds,
+        onChange: onSelectedIdsChange,
+      },
+      negate(isUndefined)
+    )
+  )
 
-      each(items, getChildren, (node, parent, { depth }) => {
-        nodeToParent.set(node, parent)
-        nodeToChildren.set(node, getChildren(node))
-        // nodeToFilteredChildren.set(node)
-        nodeToDepth.set(node, depth)
-      })
+  const uniqSelectedIds = useMemo(
+    () => new Set(resolvedSelectedIds),
+    [resolvedSelectedIds]
+  )
 
-      return [nodeToParent, nodeToChildren, nodeToFilteredChildren, nodeToDepth]
-    }, [items, getChildren])
+  const { idToItem, idToParent, idToChildren, idToDepth } = useMemo(() => {
+    const idToItem: TreeContextValue<TItem>['idToItem'] = new Map()
+    const idToParent: TreeContextValue<TItem>['idToParent'] = new Map()
+    const idToChildren: TreeContextValue<TItem>['idToChildren'] = new Map()
+    const idToDepth = new Map<Key, number>()
 
-  const nodeToA11y = useMemo(() => {
-    const nodeToA11y = new Map<TItem, TreeItemA11yAttributes>()
-    for (const node of nodeToChildren.keys()) {
-      const childNodes = nodeToChildren.get(node)
-      const parent = nodeToParent.get(node)
-      const parentChildNodes = parent ? nodeToChildren.get(parent) ?? [] : items
-      const a11y: TreeItemA11yAttributes = {
-        'aria-expanded': uniqExpandedItems.has(node),
-        'aria-selected': uniqSelectedItems.has(node),
-        tabIndex: node === focused ? -1 : 0,
-        ...(childNodes ? { 'aria-setsize': childNodes.length } : {}),
-        'aria-posinset': parentChildNodes.indexOf(node),
-        'aria-level': nodeToDepth.get(node)!,
-      }
-      nodeToA11y.set(node, a11y)
+    each(items, getChildren, (item, parent, { depth }) => {
+      const itemId = getId(item)
+      const children = getChildren(item)
+      idToItem.set(itemId, item)
+      idToParent.set(itemId, parent)
+      idToChildren.set(itemId, children)
+      idToDepth.set(itemId, depth)
+    })
+
+    return {
+      idToItem,
+      idToParent,
+      idToChildren,
+      idToDepth,
     }
-    return nodeToA11y
-  }, [nodeToParent, nodeToChildren, nodeToDepth, uniqExpandedItems])
+  }, [items, getId, getChildren])
+
+  const idToVisible = useMemo(() => {
+    // don't care about visible children
+    const idToVisible: TreeContextValue<TItem>['idToVisible'] = new Map()
+    // sort by ascending depth...
+    const itemIds = [...idToItem.keys()].sort(
+      (a, b) => idToDepth.get(a)! - idToDepth.get(b)!
+    )
+
+    for (const itemId of itemIds) {
+      const parent = idToParent.get(itemId)
+      const isPartOfFiltrate = true
+      if (isUndefined(parent)) {
+        // top level items
+        idToVisible.set(itemId, isPartOfFiltrate)
+      } else {
+        // item is  visible when the item is part of the filtrate nad parent is visible & expanded
+        const parentId = getId(parent)
+        if (!idToVisible.get(parentId)) idToVisible.set(itemId, false)
+        else
+          idToVisible.set(
+            itemId,
+            uniqExpandedIds.has(parentId) && isPartOfFiltrate
+          )
+      }
+    }
+
+    return idToVisible
+  }, [getId, uniqExpandedIds, idToItem, idToParent, idToDepth])
+
+  const idToA11y = useMemo(() => {
+    const idToA11y: TreeContextValue<TItem>['idToA11y'] = new Map()
+    for (const id of idToChildren.keys()) {
+      const childNodes = idToChildren.get(id)
+      const parent = idToParent.get(id)
+      const parentChildItems = parent
+        ? idToChildren.get(getId(parent)) ?? []
+        : items
+      const a11y: TreeItemA11yAttributes = {
+        'aria-expanded': uniqExpandedIds.has(id),
+        'aria-selected': uniqSelectedIds.has(id),
+        tabIndex: id === focusedId ? -1 : 0,
+        ...(childNodes ? { 'aria-setsize': childNodes.length } : {}),
+        'aria-posinset': parentChildItems.indexOf(idToItem.get(id)!),
+        'aria-level': idToDepth.get(id)!,
+      }
+      idToA11y.set(id, a11y)
+    }
+    return idToA11y
+  }, [
+    getId,
+    focusedId,
+    uniqExpandedIds,
+    uniqSelectedIds,
+    idToItem,
+    idToParent,
+    idToChildren,
+    idToDepth,
+  ])
 
   const contextValue: TreeContextValue<TItem> = {
     getItemId: getId,
-    setExpandedItems: setResolvedExpanded,
-    uniqExpandedItems,
-    uniqSelectedItems,
-    nodeToParent,
-    nodeToChildren,
-    nodeToFilteredChildren,
-    nodeToDepth,
-    nodeToA11y,
+    expandedIds: resolvedExpandedIds,
+    setExpandedIds: setResolvedExpandedIds,
+    uniqExpandedIds: uniqExpandedIds,
+    selectedIds: resolvedSelectedIds,
+    setSelectedIds: setResolvedSelectedIds,
+    uniqSelectedIds: uniqSelectedIds,
+    idToItem,
+    idToParent,
+    idToChildren,
+    idToVisible,
+    idToDepth,
+    idToA11y,
   }
 
   // produce aria for root list
-  const rootA11y: HTMLAttributes<HTMLUListElement> = {
+  const rootAttributes: HTMLAttributes<HTMLUListElement> = {
     role: 'tree',
     'aria-multiselectable': multiSelectable,
   }
 
   return {
-    resolvedExpanded,
-    setResolvedExpanded,
-    resolvedSelected,
-    setResolvedSelected,
+    resolvedSelected: resolvedSelectedIds,
+    setResolvedSelected: setResolvedSelectedIds,
     contextValue,
-    rootA11y,
+    rootAttributes,
   }
 }

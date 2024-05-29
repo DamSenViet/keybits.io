@@ -8,12 +8,16 @@ export interface TreeItemA11yAttributes
 
 export interface TreeContextValue<TItem> {
   getItemId: (item: TItem) => Key
-  setExpandedItems: (items: TItem[]) => void
-  uniqExpandedItems: Set<TItem>
-  uniqSelectedItems: Set<TItem>
-  nodeToParent: Map<TItem, TItem | undefined>
-  nodeToChildren: Map<TItem, TItem[] | undefined>
-  nodeToFilteredChildren: Map<TItem, TItem[] | undefined>
-  nodeToDepth: Map<TItem, number>
-  nodeToA11y: Map<TItem, TreeItemA11yAttributes>
+  expandedIds: Key[]
+  setExpandedIds: (ids: Key[]) => void
+  uniqExpandedIds: Set<Key>
+  selectedIds: Key[]
+  setSelectedIds: (ids: Key[]) => void
+  uniqSelectedIds: Set<Key>
+  idToItem: Map<Key, TItem>
+  idToVisible: Map<Key, boolean>
+  idToParent: Map<Key, TItem | undefined>
+  idToChildren: Map<Key, TItem[] | undefined>
+  idToDepth: Map<Key, number>
+  idToA11y: Map<Key, TreeItemA11yAttributes>
 }

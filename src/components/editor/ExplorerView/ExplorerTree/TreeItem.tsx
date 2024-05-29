@@ -1,9 +1,5 @@
 import { useTreeItem } from '@/components/headless-ui/tree'
-import {
-  ExplorerNode,
-  getExplorerNodeChildren,
-  getExplorerNodeId,
-} from './ExplorerNode'
+import { ExplorerNode, getExplorerNodeId } from './ExplorerNode'
 import TreeContext from './TreeContext'
 import TreeItemHeader from './TreeItemHeader'
 
@@ -13,13 +9,15 @@ interface TreeItemProps {
 }
 
 export default function TreeItem({ item }: TreeItemProps) {
-  const childItems = getExplorerNodeChildren(item)
-  const hasChildren = Boolean(childItems)
+  const { visibleChildren, isExpanded, depth, attributes } = useTreeItem(
+    TreeContext,
+    item
+  )
 
-  const { isExpanded, depth, attributes } = useTreeItem(TreeContext, item)
+  const hasChildren = Boolean(visibleChildren)
   const showIndentGuide = false
 
-  const childTreeItems = getExplorerNodeChildren(item)?.map((item) => (
+  const childTreeItems = visibleChildren?.map((item) => (
     <TreeItem
       key={getExplorerNodeId(item)}
       item={item}

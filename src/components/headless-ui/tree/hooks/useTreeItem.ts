@@ -3,44 +3,55 @@ import { TreeContextValue } from '../types'
 
 export default function useTreeItem<TItem>(
   TreeContext: Context<TreeContextValue<TItem>>,
-  node: TItem
+  item: TItem
 ) {
   const {
-    setExpandedItems,
-    uniqExpandedItems,
-    uniqSelectedItems,
-    nodeToParent,
-    nodeToA11y,
-    nodeToChildren,
-    nodeToDepth,
+    getItemId,
+    setExpandedIds,
+    uniqExpandedIds,
+    uniqSelectedIds,
+    idToParent,
+    idToChildren,
+    idToVisible,
+    idToDepth,
+    idToA11y,
   } = useContext(TreeContext)
 
-  const toggleExpanded = useCallback(() => {
-    const copy = new Set(uniqExpandedItems)
-    if (copy.has(node)) copy.delete(node)
-    else copy.add(node)
-    setExpandedItems([...copy.values()])
-  }, [setExpandedItems])
+  const itemId = getItemId(item)
 
-  const treeItem = useMemo(() => {
+  const toggleExpanded = useCallback(() => {
+    const copy = new Set(uniqExpandedIds)
+    if (copy.has(itemId)) copy.delete(itemId)
+    else copy.add(itemId)
+    setExpandedIds([...copy.values()])
+  }, [itemId, uniqExpandedIds, setExpandedIds])
+
+  const shortcuts = useMemo(() => {
+    const children = idToChildren.get(itemId)
+    const visibleChildren = children
+      ? children.filter((item) => idToVisible.get(getItemId(item)))
+      : undefined
     return {
-      isExpanded: uniqExpandedItems.has(node),
+      isExpanded: uniqExpandedIds.has(itemId),
       toggleExpanded,
-      isSelected: uniqSelectedItems.has(node),
-      parent: nodeToParent.get(node),
-      children: nodeToChildren.get(node),
-      depth: nodeToDepth.get(node) ?? 0,
-      attributes: nodeToA11y.get(node) ?? {},
+      isSelected: uniqSelectedIds.has(itemId),
+      parent: idToParent.get(itemId),
+      children,
+      visibleChildren,
+      depth: idToDepth.get(itemId) ?? 0,
+      attributes: idToA11y.get(itemId) ?? {},
     }
   }, [
-    node,
-    uniqExpandedItems,
-    uniqSelectedItems,
-    nodeToParent,
-    nodeToChildren,
-    nodeToA11y,
-    nodeToDepth,
+    itemId,
+    uniqExpandedIds,
+    uniqSelectedIds,
+    idToParent,
+    idToChildren,
+    idToA11y,
+    idToDepth,
+    idToVisible,
+    toggleExpanded,
   ])
 
-  return treeItem
+  return shortcuts
 }

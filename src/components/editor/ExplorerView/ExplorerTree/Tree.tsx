@@ -1,6 +1,13 @@
 'use client'
 
-import { useId, useMemo, useState, ComponentProps, useCallback } from 'react'
+import {
+  useId,
+  useMemo,
+  useState,
+  ComponentProps,
+  useCallback,
+  Key,
+} from 'react'
 import dynamic from 'next/dynamic'
 import {
   DndContext,
@@ -33,19 +40,19 @@ const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
 interface TreeProps extends ComponentProps<'ul'> {
   items: ExplorerNode[]
   filteredItems?: ExplorerNode[]
-  expandedItems?: ExplorerNode[]
-  onExpandedItemsChange?: (items: ExplorerNode[]) => void
-  selectedItems?: ExplorerNode[]
-  onSelectedItemsChange?: (items: ExplorerNode[]) => void
+  expandedIds?: Key[]
+  onExpandedIdsChange?: (ids: Key[]) => void
+  selectedIds?: Key[]
+  onSelectedIdsChange?: (ids: Key[]) => void
 }
 
 export default function Tree({
   items,
   filteredItems = items,
-  expandedItems = [],
-  selectedItems = [],
-  onExpandedItemsChange,
-  onSelectedItemsChange,
+  expandedIds: expandedIds = [],
+  selectedIds: selectedIds = [],
+  onExpandedIdsChange: onExpandedIdsChange,
+  onSelectedIdsChange: onSelectedIdsChange,
   ...others
 }: TreeProps) {
   const dndId = useId()
@@ -56,18 +63,18 @@ export default function Tree({
     getExplorerNodeChildren,
     {
       filteredItems,
-      expandedItems,
-      onExpandedItemsChange,
-      selectedItems,
-      onSelectedItemsChange,
+      expandedIds: expandedIds,
+      onExpandedIdsChange,
+      selectedIds: selectedIds,
+      onSelectedIdsChange,
     }
   )
 
-  const childNodes = useMemo(
+  const childItems = useMemo(
     () =>
-      items.map((item) => (
-        <TreeItem key={getExplorerNodeId(item)} item={item} />
-      )),
+      items
+        .filter((item) => contextValue.idToVisible.get(getExplorerNodeId(item)))
+        .map((item) => <TreeItem key={getExplorerNodeId(item)} item={item} />),
     [items, getExplorerNodeId]
   )
 
@@ -134,7 +141,7 @@ export default function Tree({
         onDragCancel={handleDragCancel}
       >
         <ul role="tree" {...others}>
-          {childNodes}
+          {childItems}
         </ul>
         <DraggableOverlay item={activeItem} />
       </DndContext>
