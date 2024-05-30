@@ -20,4 +20,6 @@ export interface TreeContextValue<TItem> {
   idToChildren: Map<Key, TItem[] | undefined>
   idToDepth: Map<Key, number>
   idToA11y: Map<Key, TreeItemA11yAttributes>
+  flatItems: TItem[]
+  visibleFlatItems: TItem[]
 }

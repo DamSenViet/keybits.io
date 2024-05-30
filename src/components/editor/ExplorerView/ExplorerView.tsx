@@ -52,6 +52,13 @@ const tree: ExplorerNode = {
     {
       name: 'Item I',
     },
+    {
+      name: 'Item J',
+      children: [],
+    },
+    {
+      name: 'Item K',
+    },
   ],
 }
 

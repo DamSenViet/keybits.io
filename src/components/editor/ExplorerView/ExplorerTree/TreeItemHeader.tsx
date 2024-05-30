@@ -1,4 +1,4 @@
-import { PointerEvent } from 'react'
+import { PointerEvent, useContext, useMemo } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
@@ -13,7 +13,12 @@ import {
 } from './ExplorerNode'
 import TreeContext from './TreeContext'
 import { TREE_INDENT_PX } from './constants'
-import { InsertPosition, getInsertPosition } from './utils'
+import {
+  InsertPosition,
+  getActiveDelta,
+  getInsertPosition,
+  getProjected,
+} from './utils'
 
 export interface TreeItemTitleProps {
   item: ExplorerNode
@@ -26,6 +31,7 @@ export default function TreeItemTitle({
 }: TreeItemTitleProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
+  const treeCtx = useContext(TreeContext)
   const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
 
   const children = getExplorerNodeChildren(item)
@@ -63,6 +69,24 @@ export default function TreeItemTitle({
   const insertPosition: InsertPosition =
     active && over ? getInsertPosition(active, over) : 'before'
 
+  const projection = useMemo(() => {
+    if (active && over?.id === itemId)
+      return getProjected({
+        flatItems: treeCtx.visibleFlatItems,
+        activeId: active.id,
+        overId: over.id,
+        offset: getActiveDelta(active).x,
+        indentationWidth: TREE_INDENT_PX,
+        insertPosition,
+        getId: treeCtx.getItemId,
+        getDepth: (item) => treeCtx.idToDepth.get(treeCtx.getItemId(item))!,
+        getParent: (item) => treeCtx.idToParent.get(treeCtx.getItemId(item)),
+        getChildren: (item) =>
+          treeCtx.idToChildren.get(treeCtx.getItemId(item)),
+      })
+    else return null
+  }, [active, over, treeCtx, insertPosition])
+
   const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     toggleExpanded()
@@ -72,6 +96,7 @@ export default function TreeItemTitle({
     <div
       ref={mergedRefs}
       className={cn(
+        'bg-opacity-20 bg-green-500',
         'relative rounded-sm',
         'flex flex-row items-center justify',
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
@@ -84,7 +109,11 @@ export default function TreeItemTitle({
       {/* indent */}
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
       {/* drop indicators */}
-      <DropIndicator position={insertPosition} visible={isOver} depth={depth} />
+      <DropIndicator
+        position={insertPosition}
+        visible={isOver}
+        depth={projection ? projection!.depth : depth}
+      />
       {/* debugging item center indicators */}
       {/* <div
         className="absolute w-full bg-red-400 bg-opacity-30"

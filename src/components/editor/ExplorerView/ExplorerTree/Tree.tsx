@@ -21,6 +21,7 @@ import {
   PointerSensor,
   KeyboardSensor,
   TouchSensor,
+  MeasuringStrategy,
 } from '@dnd-kit/core'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
@@ -135,6 +136,7 @@ export default function Tree({
         id={dndId}
         sensors={sensors}
         // collisionDetection={closestCorners}
+        // measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}

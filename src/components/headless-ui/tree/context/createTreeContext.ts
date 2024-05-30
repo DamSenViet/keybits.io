@@ -19,6 +19,8 @@ export default function createTreeContext<TItem>() {
     idToVisible: new Map(),
     idToDepth: new Map(),
     idToA11y: new Map(),
+    flatItems: [],
+    visibleFlatItems: [],
   })
 
   return TreeContext

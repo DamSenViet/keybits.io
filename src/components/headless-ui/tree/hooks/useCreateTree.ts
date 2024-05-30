@@ -2,7 +2,7 @@ import { useMemo, HTMLAttributes, Key } from 'react'
 import { useUncontrolled } from '@mantine/hooks'
 import { isUndefined, negate, pickBy } from 'lodash'
 import { TreeContextValue, TreeItemA11yAttributes } from '../types'
-import { each } from '../utils/traversal'
+import { each, flattenTree } from '../utils/traversal'
 
 export interface Options<TItem> {
   // not sure if we want to make this a subset or not...
@@ -23,7 +23,7 @@ export default function useCreateTree<TItem>(
   getId: (item: TItem) => Key,
   getChildren: (item: TItem) => TItem[] | undefined,
   {
-    filteredItems = items,
+    // filteredItems = items,
     expandedIds,
     defaultExpandedIds,
     onExpandedIdsChange,
@@ -152,6 +152,17 @@ export default function useCreateTree<TItem>(
     idToDepth,
   ])
 
+  const flatItems = useMemo(
+    () => flattenTree(items, getChildren, 'preorder'),
+    items
+  )
+
+  // helpful for constructing variable depth insert projections
+  const visibleFlatItems = useMemo(
+    () => flatItems.filter((item) => idToVisible.get(getId(item))),
+    [flatItems, idToVisible]
+  )
+
   const contextValue: TreeContextValue<TItem> = {
     getItemId: getId,
     expandedIds: resolvedExpandedIds,
@@ -166,6 +177,8 @@ export default function useCreateTree<TItem>(
     idToVisible,
     idToDepth,
     idToA11y,
+    flatItems,
+    visibleFlatItems,
   }
 
   // produce aria for root list
