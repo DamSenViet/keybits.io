@@ -6,7 +6,7 @@ export default function useTreeItem<TItem>(
   item: TItem
 ) {
   const {
-    getItemId,
+    getId: getItemId,
     setExpandedIds,
     uniqExpandedIds,
     uniqSelectedIds,

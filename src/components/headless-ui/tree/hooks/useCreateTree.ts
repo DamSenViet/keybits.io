@@ -164,7 +164,8 @@ export default function useCreateTree<TItem>(
   )
 
   const contextValue: TreeContextValue<TItem> = {
-    getItemId: getId,
+    getId,
+    getChildren,
     expandedIds: resolvedExpandedIds,
     setExpandedIds: setResolvedExpandedIds,
     uniqExpandedIds: uniqExpandedIds,

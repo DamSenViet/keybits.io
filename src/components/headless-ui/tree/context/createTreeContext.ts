@@ -6,7 +6,8 @@ export default function createTreeContext<TItem>() {
   const expandedIds = [] as Key[]
   const selectedIds = [] as Key[]
   const TreeContext = createContext<TreeContextValue<TItem>>({
-    getItemId: () => '',
+    getId: () => '',
+    getChildren: () => undefined,
     expandedIds,
     setExpandedIds: noop,
     uniqExpandedIds: new Set(expandedIds),

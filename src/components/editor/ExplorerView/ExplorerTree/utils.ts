@@ -18,7 +18,7 @@ export function getInsertPosition(active: Active, over: Over): InsertPosition {
 /**
  * Calculates projected insert depth & target parent for the insert operation.
  */
-export function getProjected<TItem>({
+export function getProjectedDrop<TItem>({
   flatItems,
   activeId,
   overId,

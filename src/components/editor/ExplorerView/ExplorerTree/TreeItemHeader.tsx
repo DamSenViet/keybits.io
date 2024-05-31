@@ -17,21 +17,22 @@ import {
   InsertPosition,
   getActiveDelta,
   getInsertPosition,
-  getProjected,
+  getProjectedDrop,
 } from './utils'
 
-export interface TreeItemTitleProps {
+export interface TreeItemHeaderProps {
   item: ExplorerNode
   showChevron?: boolean
 }
 
-export default function TreeItemTitle({
+export default function TreeItemHeader({
   item,
   showChevron = false,
-}: TreeItemTitleProps) {
+}: TreeItemHeaderProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
-  const treeCtx = useContext(TreeContext)
+  const { visibleFlatItems, getId, idToDepth, idToParent, idToChildren } =
+    useContext(TreeContext)
   const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
 
   const children = getExplorerNodeChildren(item)
@@ -71,21 +72,20 @@ export default function TreeItemTitle({
 
   const projection = useMemo(() => {
     if (active && over?.id === itemId)
-      return getProjected({
-        flatItems: treeCtx.visibleFlatItems,
+      return getProjectedDrop({
+        flatItems: visibleFlatItems,
         activeId: active.id,
         overId: over.id,
         offset: getActiveDelta(active).x,
         indentationWidth: TREE_INDENT_PX,
         insertPosition,
-        getId: treeCtx.getItemId,
-        getDepth: (item) => treeCtx.idToDepth.get(treeCtx.getItemId(item))!,
-        getParent: (item) => treeCtx.idToParent.get(treeCtx.getItemId(item)),
-        getChildren: (item) =>
-          treeCtx.idToChildren.get(treeCtx.getItemId(item)),
+        getId: getId,
+        getDepth: (item) => idToDepth.get(getId(item))!,
+        getParent: (item) => idToParent.get(getId(item)),
+        getChildren: (item) => idToChildren.get(getId(item)),
       })
     else return null
-  }, [active, over, treeCtx, insertPosition])
+  }, [active, over, insertPosition, getId])
 
   const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {
     event.stopPropagation()

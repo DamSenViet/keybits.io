@@ -7,7 +7,8 @@ export interface TreeItemA11yAttributes
 }
 
 export interface TreeContextValue<TItem> {
-  getItemId: (item: TItem) => Key
+  getId: (item: TItem) => Key
+  getChildren: (item: TItem) => TItem[] | undefined
   expandedIds: Key[]
   setExpandedIds: (ids: Key[]) => void
   uniqExpandedIds: Set<Key>
