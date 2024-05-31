@@ -31,8 +31,7 @@ export default function TreeItemHeader({
 }: TreeItemHeaderProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
-  const { visibleFlatItems, getId, idToParent, idToChildren, idToDepth } =
-    useContext(TreeContext)
+  const treeCtx = useContext(TreeContext)
   const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
 
   const children = getExplorerNodeChildren(item)
@@ -74,29 +73,29 @@ export default function TreeItemHeader({
   const projection = useMemo(() => {
     if (active?.id && over?.id === itemId)
       return getProjectedDrop({
-        flatItems: visibleFlatItems,
+        flatItems: treeCtx.visibleFlatItems,
         activeId: active.id,
         overId: over.id,
         offset: getActiveDelta(active).x,
         indentationWidth: TREE_INDENT_PX,
         insertPosition,
-        getId,
-        getDepth: (item) => idToDepth.get(getId(item))!,
-        getParent: (item) => idToParent.get(getId(item)),
-        getChildren: (item) => idToChildren.get(getId(item)),
+        getId: treeCtx.getId,
+        getDepth: (item) => treeCtx.idToDepth.get(treeCtx.getId(item))!,
+        getParent: (item) => treeCtx.idToParent.get(treeCtx.getId(item)),
+        getChildren: (item) => treeCtx.idToChildren.get(treeCtx.getId(item)),
       })
     else return undefined
   }, [
-    itemId,
     active?.id,
     active?.rect.current,
     over?.id,
+    itemId,
     insertPosition,
-    getId,
-    idToParent,
-    idToChildren,
-    idToDepth,
-    visibleFlatItems,
+    treeCtx.getId,
+    treeCtx.idToParent,
+    treeCtx.idToChildren,
+    treeCtx.idToDepth,
+    treeCtx.visibleFlatItems,
   ])
 
   const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {

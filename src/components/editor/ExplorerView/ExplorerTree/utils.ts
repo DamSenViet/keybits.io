@@ -47,8 +47,8 @@ export function getProjectedDrop<TItem>({
     activeIndex === overIndex
       ? overIndex
       : insertPosition === 'before'
-        ? overIndex
-        : overIndex + 1
+        ? overIndex - Number(activeIndex < overIndex)
+        : overIndex + Number(activeIndex > overIndex)
 
   const newItems = arrayMove(flatItems, activeIndex, insertIndex)
   const newActiveIndex = newItems.findIndex((item) => getId(item) === activeId)
