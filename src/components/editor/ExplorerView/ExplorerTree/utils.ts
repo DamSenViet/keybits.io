@@ -28,6 +28,7 @@ export function getProjected<TItem>({
   getId,
   getDepth,
   getParent,
+  getChildren,
 }: {
   flatItems: TItem[]
   activeId: Key
@@ -43,9 +44,9 @@ export function getProjected<TItem>({
   const activeIndex = flatItems.findIndex((item) => getId(item) === activeId)
   const overIndex = flatItems.findIndex((item) => getId(item) === overId)
   const insertIndex =
-    insertPosition === 'before'
+    activeIndex === overIndex
       ? overIndex
-      : activeIndex === overIndex
+      : insertPosition === 'before'
         ? overIndex
         : overIndex + 1
 
@@ -55,54 +56,38 @@ export function getProjected<TItem>({
   const prevItem = newItems[newActiveIndex - 1]
   const nextItem = newItems[newActiveIndex + 1]
   const dragDepth = Math.floor(offset / indentationWidth)
+  // we use a projected depth so that we can carry on the current depth
+  // as we drag the item around, makes for more intuitive vertical dragging
   const projectedDepth = getDepth(activeItem) + dragDepth
 
-  // whether or on we add 1 here is based on whether or not the previous item can have children
-  const prevDepth = prevItem ? getDepth(prevItem) + 1 : 0
+  // compute possible depth by comparing the simulated previous and next items
+  // if we're allowed to nest, add 1 more to the possible previous depth
+  const canHaveChildren = Boolean(prevItem && getChildren(prevItem))
+  const addPossPrevDepth = canHaveChildren ? 1 : 0
+  const prevDepth = prevItem ? getDepth(prevItem) + addPossPrevDepth : 0
   const nextDepth = nextItem ? getDepth(nextItem) : 0
-
   const depth = clamp(
     projectedDepth,
     Math.min(prevDepth, nextDepth),
     Math.max(prevDepth, nextDepth)
   )
-  // TODO: CHECK IF THIS IS CORRECT
+
   function getParentId() {
-    if (depth === 0 || !prevItem) {
-      return null
-    }
-
-    if (depth === getDepth(prevItem)) {
-      return getId(getParent(prevItem)!)
-    }
-
-    if (depth > getDepth(prevItem)) {
-      return getId(prevItem)
-    }
-
-    // get the first matching depth backwards on the flat items
+    if (depth === 0 || !prevItem) return undefined
+    if (depth === getDepth(prevItem)) return getId(getParent(prevItem)!)
+    if (depth > getDepth(prevItem)) return getId(prevItem)
+    // find the parent of our active item in the new position by looking behind
+    // array using the active item as the divider
     const newParent = newItems
       .slice(0, newActiveIndex)
       .reverse()
       .find((item) => getDepth(item) === depth - 1)
-
     return newParent ? getId(newParent) : undefined
   }
-  const parentId = getParentId()
-  console.log({
-    // toIndex: insertIndex,
-    projectedDepth,
-    depth,
-    prevDepth,
-    nextDepth,
-    parentId,
-  })
 
   return {
-    // insert information
     depth,
-    parentId,
-    insertIndex: 0,
+    parentId: getParentId(),
   }
 }
 

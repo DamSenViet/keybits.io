@@ -96,7 +96,6 @@ export default function TreeItemTitle({
     <div
       ref={mergedRefs}
       className={cn(
-        'bg-opacity-20 bg-green-500',
         'relative rounded-sm',
         'flex flex-row items-center justify',
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
