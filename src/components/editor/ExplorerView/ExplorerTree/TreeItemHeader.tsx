@@ -21,11 +21,13 @@ import {
 } from './utils'
 
 export interface TreeItemHeaderProps {
+  className?: string
   item: ExplorerNode
   showChevron?: boolean
 }
 
 export default function TreeItemHeader({
+  className,
   item,
   showChevron = false,
 }: TreeItemHeaderProps) {
@@ -111,6 +113,7 @@ export default function TreeItemHeader({
         'flex flex-row items-center justify',
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
         'group',
+        className,
         isDragging ? 'opacity-40' : null
       )}
       {...attributes}

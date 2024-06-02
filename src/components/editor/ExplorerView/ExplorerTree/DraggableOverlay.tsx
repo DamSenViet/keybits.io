@@ -24,7 +24,12 @@ export default function DraggableOverlay({ item }: DraggableOverlayProps) {
     <>
       {createPortal(
         <DragOverlay dropAnimation={dropAnimation}>
-          {item ? <TreeItemHeader item={item} /> : null}
+          {item ? (
+            <TreeItemHeader
+              className="bg-background border-solid border-2 border-blue-400 opacity-50"
+              item={item}
+            />
+          ) : null}
         </DragOverlay>,
         document.body
       )}
