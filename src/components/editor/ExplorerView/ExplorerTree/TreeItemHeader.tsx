@@ -1,4 +1,4 @@
-import { PointerEvent, useContext, useMemo } from 'react'
+import { PointerEvent, useContext, useEffect, useMemo } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
@@ -11,14 +11,9 @@ import {
   getExplorerNodeChildren,
   getExplorerNodeId,
 } from './ExplorerNode'
+import HoverDropContext from './HoverDropContext'
 import TreeContext from './TreeContext'
 import { TREE_INDENT_PX } from './constants'
-import {
-  InsertPosition,
-  getActiveDelta,
-  getInsertPosition,
-  getProjectedDrop,
-} from './utils'
 
 export interface TreeItemHeaderProps {
   className?: string
@@ -33,7 +28,6 @@ export default function TreeItemHeader({
 }: TreeItemHeaderProps) {
   // determine whether we're expanded
   const itemId = getExplorerNodeId(item)
-  const treeCtx = useContext(TreeContext)
   const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
 
   const children = getExplorerNodeChildren(item)
@@ -49,12 +43,7 @@ export default function TreeItemHeader({
   } = useDraggable({ id: itemId })
 
   // droppable for inserts before/after
-  const {
-    setNodeRef: setDroppableNodeRef,
-    isOver,
-    active,
-    over,
-  } = useDroppable({
+  const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
     id: `${itemId}`,
   })
 
@@ -66,39 +55,7 @@ export default function TreeItemHeader({
     setDraggableNodeRef
   )
 
-  const insertPosition: InsertPosition = useMemo(() => {
-    if (active?.rect.current && over?.rect)
-      return getInsertPosition(active, over)
-    else return 'before'
-  }, [active?.rect.current, over?.rect])
-
-  const projection = useMemo(() => {
-    if (active?.id && over?.id === itemId)
-      return getProjectedDrop({
-        flatItems: treeCtx.visibleFlatItems,
-        activeId: active.id,
-        overId: over.id,
-        offset: getActiveDelta(active).x,
-        indentationWidth: TREE_INDENT_PX,
-        insertPosition,
-        getId: treeCtx.getId,
-        getDepth: (item) => treeCtx.idToDepth.get(treeCtx.getId(item))!,
-        getParent: (item) => treeCtx.idToParent.get(treeCtx.getId(item)),
-        getChildren: (item) => treeCtx.idToChildren.get(treeCtx.getId(item)),
-      })
-    else return undefined
-  }, [
-    active?.id,
-    active?.rect.current,
-    over?.id,
-    itemId,
-    insertPosition,
-    treeCtx.getId,
-    treeCtx.idToParent,
-    treeCtx.idToChildren,
-    treeCtx.idToDepth,
-    treeCtx.visibleFlatItems,
-  ])
+  const hoverDrop = useContext(HoverDropContext)
 
   const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {
     event.stopPropagation()
@@ -122,11 +79,13 @@ export default function TreeItemHeader({
       {/* indent */}
       <div className="flex-none" style={{ width: depth * TREE_INDENT_PX }} />
       {/* drop indicators */}
-      <DropIndicator
-        position={insertPosition}
-        visible={isOver}
-        depth={projection ? projection!.depth : depth}
-      />
+      {isOver && hoverDrop && (
+        <DropIndicator
+          position={hoverDrop.insertPosition}
+          visible={isOver}
+          depth={hoverDrop.projectedDrop.depth}
+        />
+      )}
       {/* debugging item center indicators */}
       {/* <div
         className="absolute w-full bg-red-400 bg-opacity-30"

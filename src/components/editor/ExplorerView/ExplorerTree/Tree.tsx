@@ -20,7 +20,6 @@ import {
   useSensor,
   PointerSensor,
   KeyboardSensor,
-  TouchSensor,
   MeasuringStrategy,
 } from '@dnd-kit/core'
 import { useCreateTree } from '@/components/headless-ui/tree'
@@ -30,9 +29,11 @@ import {
   getExplorerNodeChildren,
   getExplorerNodeId,
 } from './ExplorerNode'
+import HoverDropContext, { HoverDropContextValue } from './HoverDropContext'
 import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
-import { getInsertPosition } from './utils'
+import { TREE_INDENT_PX } from './constants'
+import { getActiveDelta, getInsertPosition, getProjectedDrop } from './utils'
 
 const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
   ssr: false,
@@ -79,7 +80,6 @@ export default function Tree({
     [items, getExplorerNodeId]
   )
 
-  const [offsetLeft, setOffsetLeft] = useState(0)
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const activeItem = useMemo(
     () =>
@@ -91,6 +91,9 @@ export default function Tree({
     [activeId]
   )
 
+  // projected drop should be passed down
+  const [hoverDrop, setHoverDrop] = useState<HoverDropContextValue | null>(null)
+
   const handleDragStart = useCallback(
     ({ active }: DragStartEvent) => {
       setActiveId(active.id)
@@ -98,16 +101,49 @@ export default function Tree({
     [setActiveId]
   )
 
-  const handleDragMove = useCallback(
-    ({ delta }: DragMoveEvent) => {
-      setOffsetLeft(delta.x)
+  const handleDragOverMove = useCallback(
+    ({ active, over }: DragMoveEvent) => {
+      if (over) {
+        // todo: prevent drops into cannot drop into descendants or self
+        // is insertPosition always stale on switch...
+        const insertPosition = getInsertPosition(active, over)
+        const projectedDrop = getProjectedDrop({
+          flatItems: contextValue.visibleFlatItems,
+          activeId: active.id,
+          overId: over.id,
+          offset: getActiveDelta(active).x,
+          indentationWidth: TREE_INDENT_PX,
+          insertPosition: insertPosition,
+          getId: contextValue.getId,
+          getDepth: (item) =>
+            contextValue.idToDepth.get(contextValue.getId(item))!,
+          getParent: (item) =>
+            contextValue.idToParent.get(contextValue.getId(item)),
+          getChildren: (item) =>
+            contextValue.idToChildren.get(contextValue.getId(item)),
+        })
+        // note that we are one cycle behind the actual dnd context provided to child items
+        // insert position is STALE
+        setHoverDrop({
+          insertPosition,
+          projectedDrop,
+        })
+      } else {
+        setHoverDrop(null)
+      }
     },
-    [setOffsetLeft]
+    [
+      contextValue.visibleFlatItems,
+      contextValue.getId,
+      contextValue.idToParent,
+      contextValue.idToParent,
+      contextValue.idToChildren,
+    ]
   )
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { delay: 150, tolerance: 5 },
+      activationConstraint: { distance: 5 },
     }),
     useSensor(KeyboardSensor)
   )
@@ -120,6 +156,7 @@ export default function Tree({
         }
       }
       setActiveId(null)
+      setHoverDrop(null)
     },
     [setActiveId]
   )
@@ -127,6 +164,7 @@ export default function Tree({
   const handleDragCancel = useCallback(
     (event: DragCancelEvent) => {
       setActiveId(null)
+      setHoverDrop(null)
     },
     [setActiveId]
   )
@@ -136,17 +174,18 @@ export default function Tree({
       <DndContext
         id={dndId}
         sensors={sensors}
-        // collisionDetection={closestCorners}
-        // measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
         onDragStart={handleDragStart}
-        onDragMove={handleDragMove}
+        onDragOver={handleDragOverMove}
+        onDragMove={handleDragOverMove}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <ul role="tree" {...others}>
-          {childItems}
-        </ul>
-        <DraggableOverlay item={activeItem} />
+        <HoverDropContext.Provider value={hoverDrop}>
+          <ul role="tree" {...others}>
+            {childItems}
+          </ul>
+          <DraggableOverlay item={activeItem} />
+        </HoverDropContext.Provider>
       </DndContext>
     </TreeContext.Provider>
   )

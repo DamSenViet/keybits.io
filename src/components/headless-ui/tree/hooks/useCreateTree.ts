@@ -160,7 +160,7 @@ export default function useCreateTree<TItem>(
   // helpful for constructing variable depth insert projections
   const visibleFlatItems = useMemo(
     () => flatItems.filter((item) => idToVisible.get(getId(item))),
-    [flatItems, idToVisible]
+    [flatItems, idToVisible, getId]
   )
 
   const contextValue: TreeContextValue<TItem> = {

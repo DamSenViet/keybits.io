@@ -5,7 +5,7 @@ import { InsertPosition } from './utils'
 
 export interface DropIndicatorProps {
   visible: boolean
-  position: InsertPosition
+  position?: InsertPosition
   depth?: number
 }
 
@@ -22,7 +22,7 @@ const DropIndicator = forwardRef<HTMLDivElement, DropIndicatorProps>(
               ? 'bottom-0 translate-y-1/2'
               : 'top-0 -translate-y-1/2'
             : 'top-0 -translate-y-1/2',
-          visible ? 'visible' : null
+          visible && position !== null ? 'visible' : null
         )}
         style={{
           paddingLeft:
