@@ -22,8 +22,10 @@ import {
   KeyboardSensor,
   MeasuringStrategy,
 } from '@dnd-kit/core'
+import { isUndefined } from 'lodash'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
+import { cn } from '@/lib/utils'
 import {
   ExplorerNode,
   getExplorerNodeChildren,
@@ -49,6 +51,7 @@ interface TreeProps extends ComponentProps<'ul'> {
 }
 
 export default function Tree({
+  className,
   items,
   filteredItems = items,
   expandedIds: expandedIds = [],
@@ -181,7 +184,17 @@ export default function Tree({
         onDragCancel={handleDragCancel}
       >
         <HoverDropContext.Provider value={hoverDrop}>
-          <ul role="tree" {...others}>
+          <ul
+            role="tree"
+            className={cn(
+              'rounded-md',
+              isUndefined(hoverDrop && hoverDrop.projectedDrop.parentId)
+                ? 'bg-muted'
+                : null,
+              className
+            )}
+            {...others}
+          >
             {childItems}
           </ul>
           <DraggableOverlay item={activeItem} />
