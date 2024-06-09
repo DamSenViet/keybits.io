@@ -85,7 +85,7 @@ export default function TreeItemHeader({
       {/* drop indicators */}
       {isOver && hoverDrop && (
         <DropIndicator
-          position={hoverDrop.insertPosition}
+          position={hoverDrop.dropPosition}
           depth={hoverDrop.projectedDrop.depth}
         />
       )}

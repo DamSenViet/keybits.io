@@ -1,10 +1,10 @@
 import { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { TREE_INDENT_PX, CHEVRON_SPACE, ITEM_ICON_WIDTH } from './constants'
-import { InsertPosition } from './utils'
+import { DropPosition } from './types/projection'
 
 export interface DropIndicatorProps {
-  position?: InsertPosition
+  position?: DropPosition
   depth?: number
 }
 

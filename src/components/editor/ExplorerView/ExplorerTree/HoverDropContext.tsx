@@ -1,8 +1,9 @@
 import { createContext } from 'react'
-import { getProjectedDrop, InsertPosition } from './utils'
+import { DropPosition } from './types/projection'
+import { getProjectedDrop } from './utils'
 
 export interface HoverDropContextValue {
-  insertPosition: InsertPosition
+  dropPosition: DropPosition
   projectedDrop: ReturnType<typeof getProjectedDrop>
 }
 

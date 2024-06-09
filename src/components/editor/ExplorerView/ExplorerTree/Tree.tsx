@@ -1,4 +1,12 @@
-import { useId, useMemo, useState, useCallback, Key } from 'react'
+import {
+  useId,
+  useMemo,
+  useState,
+  useCallback,
+  Key,
+  AriaAttributes,
+  forwardRef,
+} from 'react'
 import dynamic from 'next/dynamic'
 import {
   DndContext,
@@ -25,25 +33,14 @@ import HoverDropContext, { HoverDropContextValue } from './HoverDropContext'
 import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
 import { TREE_INDENT_PX } from './constants'
-import {
-  InsertPosition,
-  getActiveDelta,
-  getInsertPosition,
-  getProjectedDrop,
-} from './utils'
+import { DropEvent } from './types/events'
+import { getActiveDelta, getDropPosition, getProjectedDrop } from './utils'
 
 const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
   ssr: false,
 })
 
-interface DropEvent {
-  activeId: Key
-  parentId: Key | undefined
-  overId: Key
-  position: InsertPosition
-}
-
-export interface TreeProps {
+export interface TreeProps extends AriaAttributes {
   className?: string
   items: ExplorerNode[]
   filteredItems?: ExplorerNode[]
@@ -54,19 +51,22 @@ export interface TreeProps {
   onDrop?: (dropEvent: DropEvent) => void
 }
 
-export default function Tree({
-  className,
-  items,
-  filteredItems = items,
-  expandedIds = [],
-  selectedIds = [],
-  onExpandedIdsChange,
-  onSelectedIdsChange,
-  onDrop = noop,
-}: TreeProps) {
+const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
+  {
+    className,
+    items,
+    filteredItems = items,
+    expandedIds = [],
+    selectedIds = [],
+    onExpandedIdsChange,
+    onSelectedIdsChange,
+    onDrop = noop,
+  },
+  ref
+) {
   const dndId = useId()
 
-  const { contextValue } = useCreateTree(
+  const { rootAttributes, contextValue } = useCreateTree(
     items,
     getExplorerNodeId,
     getExplorerNodeChildren,
@@ -113,14 +113,14 @@ export default function Tree({
       if (over) {
         // todo: prevent drops into cannot drop into descendants or self
         // is insertPosition always stale on switch...
-        const insertPosition = getInsertPosition(active, over)
+        const dropPosition = getDropPosition(active, over)
         const projectedDrop = getProjectedDrop({
           flatItems: contextValue.visibleFlatItems,
           activeId: active.id,
           overId: over.id,
           offset: getActiveDelta(active).x,
           indentationWidth: TREE_INDENT_PX,
-          insertPosition: insertPosition,
+          dropPosition,
           getId: contextValue.getId,
           getDepth: (item) =>
             contextValue.idToDepth.get(contextValue.getId(item))!,
@@ -132,7 +132,7 @@ export default function Tree({
         // note that we are one cycle behind the actual dnd context provided to child items
         // insert position is STALE
         setHoverDrop({
-          insertPosition,
+          dropPosition,
           projectedDrop,
         })
       } else {
@@ -162,7 +162,7 @@ export default function Tree({
           activeId: active.id,
           parentId: hoverDrop.projectedDrop.parentId,
           overId: over.id,
-          position: hoverDrop.insertPosition,
+          position: hoverDrop.dropPosition,
         })
       }
       setActiveId(null)
@@ -192,7 +192,7 @@ export default function Tree({
       >
         <HoverDropContext.Provider value={hoverDrop}>
           <ul
-            role="tree"
+            ref={ref}
             className={cn(
               'rounded-md',
               isUndefined(hoverDrop && hoverDrop.projectedDrop.parentId)
@@ -200,6 +200,7 @@ export default function Tree({
                 : null,
               className
             )}
+            {...rootAttributes}
           >
             {childItems}
           </ul>
@@ -208,4 +209,6 @@ export default function Tree({
       </DndContext>
     </TreeContext.Provider>
   )
-}
+})
+
+export default Tree

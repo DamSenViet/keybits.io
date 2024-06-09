@@ -3,10 +3,9 @@ import { Active, Over } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { Coordinates } from '@dnd-kit/utilities'
 import { clamp } from 'lodash'
+import { DropPosition } from './types/projection'
 
-export type InsertPosition = 'before' | 'after'
-
-export function getInsertPosition(active: Active, over: Over): InsertPosition {
+export function getDropPosition(active: Active, over: Over): DropPosition {
   const activeRect = active.rect.current.translated!
   const overRect = over.rect
   const activeCenterY = activeRect.top + activeRect.height / 2
@@ -24,7 +23,7 @@ export function getProjectedDrop<TItem>({
   overId,
   offset,
   indentationWidth,
-  insertPosition = 'after',
+  dropPosition = 'after',
   getId,
   getDepth,
   getParent,
@@ -35,7 +34,7 @@ export function getProjectedDrop<TItem>({
   overId: Key
   offset: number
   indentationWidth: number
-  insertPosition: InsertPosition
+  dropPosition: DropPosition
   getId: (item: TItem) => Key
   getDepth: (item: TItem) => number
   getParent: (item: TItem) => TItem | undefined
@@ -46,7 +45,7 @@ export function getProjectedDrop<TItem>({
   const insertIndex =
     activeIndex === overIndex
       ? overIndex
-      : insertPosition === 'before'
+      : dropPosition === 'before'
         ? overIndex - Number(activeIndex < overIndex)
         : overIndex + Number(activeIndex > overIndex)
 
