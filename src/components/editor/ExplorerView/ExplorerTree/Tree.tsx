@@ -129,8 +129,6 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
           getChildren: (item) =>
             contextValue.idToChildren.get(contextValue.getId(item)),
         })
-        // note that we are one cycle behind the actual dnd context provided to child items
-        // insert position is STALE
         setHoverDrop({
           dropPosition,
           projectedDrop,
