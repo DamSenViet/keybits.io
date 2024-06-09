@@ -1,15 +1,11 @@
-'use client'
+import { forwardRef } from 'react'
 
-import { useState } from 'react'
+export interface CenterPanelProps {}
 
-const characters = ['A', 'B', 'C', 'D', 'E']
+const CenterPanel = forwardRef<HTMLDivElement, CenterPanelProps>(
+  function (props, ref) {
+    return <div ref={ref} className="h-full"></div>
+  }
+)
 
-export default function CenterPanel() {
-  const [letters, setLetters] = useState(
-    characters.map((character) => ({
-      id: character,
-    }))
-  )
-
-  return <div className="grow p-16"></div>
-}
+export default CenterPanel
