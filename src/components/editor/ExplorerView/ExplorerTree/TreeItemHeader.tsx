@@ -6,11 +6,7 @@ import { ChevronDown, File, Folder, FolderOpen } from 'lucide-react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
 import DropIndicator from './DropIndicator'
-import {
-  ExplorerNode,
-  getExplorerNodeChildren,
-  getExplorerNodeId,
-} from './ExplorerNode'
+import { ExplorerNode } from './ExplorerNode'
 import HoverDropContext from './HoverDropContext'
 import TreeContext from './TreeContext'
 import { TREE_INDENT_PX } from './constants'
@@ -27,24 +23,22 @@ export default function TreeItemHeader({
   showChevron = false,
 }: TreeItemHeaderProps) {
   // determine whether we're expanded
-  const itemId = getExplorerNodeId(item)
-  const { depth, isExpanded, toggleExpanded } = useTreeItem(TreeContext, item)
+  const { id, canHaveChildren, depth, isExpanded, toggleExpanded } =
+    useTreeItem(TreeContext, item)
 
-  const children = getExplorerNodeChildren(item)
-  const isParent = Boolean(children)
-  const Icon = isParent ? (isExpanded ? FolderOpen : Folder) : File
-  const resolvedShowChevron = isParent && showChevron
+  const Icon = canHaveChildren ? (isExpanded ? FolderOpen : Folder) : File
+  const resolvedShowChevron = canHaveChildren && showChevron
 
   const {
     isDragging,
     attributes,
     listeners,
     setNodeRef: setDraggableNodeRef,
-  } = useDraggable({ id: itemId })
+  } = useDraggable({ id })
 
   // droppable for inserts before/after
   const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
-    id: `${itemId}`,
+    id: `${id}`,
   })
 
   // conditionally set the droppable ref

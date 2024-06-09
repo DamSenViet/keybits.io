@@ -189,8 +189,6 @@ export default function useCreateTree<TItem>(
   }
 
   return {
-    resolvedSelected: resolvedSelectedIds,
-    setResolvedSelected: setResolvedSelectedIds,
     contextValue,
     rootAttributes,
   }

@@ -1,5 +1,4 @@
-import { useContext, useMemo } from 'react'
-import { useDndContext } from '@dnd-kit/core'
+import { useContext } from 'react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
 import { ExplorerNode, getExplorerNodeId } from './ExplorerNode'
@@ -13,17 +12,14 @@ interface TreeItemProps {
 }
 
 export default function TreeItem({ item }: TreeItemProps) {
-  const { visibleChildren, isExpanded, depth, attributes } = useTreeItem(
+  const { id, visibleChildren, isExpanded, depth, attributes } = useTreeItem(
     TreeContext,
     item
   )
 
-  const treeCtx = useContext(TreeContext)
-  const itemId = treeCtx.getId(item)
-
   const hoverDrop = useContext(HoverDropContext)
 
-  const isDroppingIntoThis = hoverDrop?.projectedDrop?.parentId === itemId
+  const isDroppingIntoThis = hoverDrop?.projectedDrop?.parentId === id
 
   const hasChildren = Boolean(visibleChildren)
   const showIndentGuide = false
