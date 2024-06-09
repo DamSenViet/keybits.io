@@ -1,5 +1,5 @@
 import { Key } from 'react'
-import { DropPosition } from '../utils'
+import { DropPosition } from './projection'
 
 export interface DropEvent {
   activeId: Key
