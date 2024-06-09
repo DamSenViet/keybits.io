@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  useId,
-  useMemo,
-  useState,
-  ComponentProps,
-  useCallback,
-  Key,
-} from 'react'
+import { useId, useMemo, useState, useCallback, Key } from 'react'
 import dynamic from 'next/dynamic'
 import {
   DndContext,
@@ -20,9 +13,8 @@ import {
   useSensor,
   PointerSensor,
   KeyboardSensor,
-  MeasuringStrategy,
 } from '@dnd-kit/core'
-import { isUndefined } from 'lodash'
+import { isUndefined, noop } from 'lodash'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
 import { cn } from '@/lib/utils'
@@ -35,30 +27,44 @@ import HoverDropContext, { HoverDropContextValue } from './HoverDropContext'
 import TreeContext from './TreeContext'
 import TreeItem from './TreeItem'
 import { TREE_INDENT_PX } from './constants'
-import { getActiveDelta, getInsertPosition, getProjectedDrop } from './utils'
+import {
+  InsertPosition,
+  getActiveDelta,
+  getInsertPosition,
+  getProjectedDrop,
+} from './utils'
 
 const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
   ssr: false,
 })
 
-interface TreeProps extends ComponentProps<'ul'> {
+interface DropEvent {
+  activeId: Key
+  parentId: Key | undefined
+  overId: Key
+  position: InsertPosition
+}
+
+export interface TreeProps {
+  className?: string
   items: ExplorerNode[]
   filteredItems?: ExplorerNode[]
   expandedIds?: Key[]
   onExpandedIdsChange?: (ids: Key[]) => void
   selectedIds?: Key[]
   onSelectedIdsChange?: (ids: Key[]) => void
+  onDrop?: (dropEvent: DropEvent) => void
 }
 
 export default function Tree({
   className,
   items,
   filteredItems = items,
-  expandedIds: expandedIds = [],
-  selectedIds: selectedIds = [],
-  onExpandedIdsChange: onExpandedIdsChange,
-  onSelectedIdsChange: onSelectedIdsChange,
-  ...others
+  expandedIds = [],
+  selectedIds = [],
+  onExpandedIdsChange,
+  onSelectedIdsChange,
+  onDrop = noop,
 }: TreeProps) {
   const dndId = useId()
 
@@ -153,10 +159,13 @@ export default function Tree({
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
-      if (over) {
-        if (active.id !== over.id) {
-          const insertPosition = getInsertPosition(active, over)
-        }
+      if (over && hoverDrop) {
+        onDrop({
+          activeId: active.id,
+          parentId: hoverDrop.projectedDrop.parentId,
+          overId: over.id,
+          position: hoverDrop.insertPosition,
+        })
       }
       setActiveId(null)
       setHoverDrop(null)
@@ -193,7 +202,6 @@ export default function Tree({
                 : null,
               className
             )}
-            {...others}
           >
             {childItems}
           </ul>
