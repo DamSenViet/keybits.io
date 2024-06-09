@@ -1,4 +1,4 @@
-import { PointerEvent, useContext, useEffect, useMemo } from 'react'
+import { PointerEvent, useContext } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
@@ -57,7 +57,11 @@ export default function TreeItemHeader({
 
   const hoverDrop = useContext(HoverDropContext)
 
-  const handleExpand = (event: PointerEvent<HTMLButtonElement>) => {
+  /**
+   * Handles expand only when the caret is clicked.
+   * @param event The pointer event.
+   */
+  const handleStrictExpand = (event: PointerEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     toggleExpanded()
   }
@@ -82,7 +86,6 @@ export default function TreeItemHeader({
       {isOver && hoverDrop && (
         <DropIndicator
           position={hoverDrop.insertPosition}
-          visible={isOver}
           depth={hoverDrop.projectedDrop.depth}
         />
       )}
@@ -98,7 +101,7 @@ export default function TreeItemHeader({
           resolvedShowChevron ? 'visible' : 'invisible'
         )}
         aria-label="expand"
-        onPointerDown={handleExpand}
+        onPointerDown={handleStrictExpand}
       >
         <ChevronDown
           className={cn(

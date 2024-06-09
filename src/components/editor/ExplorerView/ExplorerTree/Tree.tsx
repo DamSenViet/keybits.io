@@ -1,5 +1,3 @@
-'use client'
-
 import { useId, useMemo, useState, useCallback, Key } from 'react'
 import dynamic from 'next/dynamic'
 import {

@@ -4,25 +4,22 @@ import { TREE_INDENT_PX, CHEVRON_SPACE, ITEM_ICON_WIDTH } from './constants'
 import { InsertPosition } from './utils'
 
 export interface DropIndicatorProps {
-  visible: boolean
   position?: InsertPosition
   depth?: number
 }
 
 const DropIndicator = forwardRef<HTMLDivElement, DropIndicatorProps>(
-  ({ visible = false, position = 'before', depth = 0 }, ref) => {
+  ({ position = 'before', depth = 0 }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
           'absolute w-full',
-          'invisible',
           position
             ? position === 'after'
               ? 'bottom-0 translate-y-1/2'
               : 'top-0 -translate-y-1/2'
-            : 'top-0 -translate-y-1/2',
-          visible && position !== null ? 'visible' : null
+            : 'top-0 -translate-y-1/2'
         )}
         style={{
           paddingLeft:
