@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { SortableList } from './SortableList'
 
 const characters = ['A', 'B', 'C', 'D', 'E']
 
@@ -12,19 +11,5 @@ export default function CenterPanel() {
     }))
   )
 
-  return (
-    <div className="grow p-16">
-      <SortableList
-        items={letters}
-        onChange={setLetters}
-        getId={(item) => item.id}
-        renderItem={(item) => (
-          <SortableList.Item id={item.id}>
-            {item.id}
-            <SortableList.DragHandle />
-          </SortableList.Item>
-        )}
-      />
-    </div>
-  )
+  return <div className="grow p-16"></div>
 }
