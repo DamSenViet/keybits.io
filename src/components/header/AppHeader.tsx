@@ -10,7 +10,7 @@ interface AppHeaderProps {
 export default function AppHeader({ compact = false }: AppHeaderProps) {
   return (
     <header
-      className={`px-4 ${compact ? 'h-14' : 'h-16'} flex border border-input bg-background content-center`}
+      className={`px-4 ${compact ? 'h-14' : 'h-16'} flex border-b content-center`}
     >
       {compact ? null : <Navigation />}
       <div className="ml-auto flex self-center">
