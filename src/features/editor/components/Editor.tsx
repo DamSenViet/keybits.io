@@ -33,13 +33,13 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
       >
         <LeftPanel />
       </Panel>
-      <PanelResizeHandle className="w-2 border-l" />
+      <PanelResizeHandle className="w-2 border-l border-border/40" />
       <Panel defaultSize={80}>
         <CenterPanel />
       </Panel>
       {lastFocused && (
         <>
-          <Panel className="flex flex-col border-l">
+          <Panel className="flex flex-col border-l border-border/40">
             <RightPanel />
           </Panel>
         </>

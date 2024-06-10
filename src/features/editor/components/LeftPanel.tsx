@@ -8,7 +8,7 @@ const LeftPanel = function (props: LeftPanelProps) {
   return (
     <>
       <ExplorerView className="px-4 pt-4" />
-      <FileActionView className="px-4 border-t" />
+      <FileActionView className="px-4 border-t border-border/40" />
     </>
   )
 }
