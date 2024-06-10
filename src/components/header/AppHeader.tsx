@@ -12,7 +12,7 @@ export default function AppHeader({ compact = false }: AppHeaderProps) {
     <header
       className={`px-4 ${compact ? 'h-14' : 'h-16'} flex border-b border-border/40 content-center`}
     >
-      {compact ? null : <Navigation />}
+      <Navigation />
       <div className="ml-auto flex self-center">
         <ThemeModeToggle />
       </div>

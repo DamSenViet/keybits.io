@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { GeistMono } from 'geist/font/mono'
+import { GeistSans } from 'geist/font/sans'
 import Providers from '@/providers'
 import '@/styles/globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
@@ -27,9 +26,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+    >
       <body
-        className={`bg-background ${inter.className} min-h-[100dvh] flex flex-col`}
+        className={`min-h-[100dvh] flex flex-col antialiased bg-background`}
       >
         <Providers>{children}</Providers>
       </body>
