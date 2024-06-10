@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { Import as ImportIcon, BookOpenText as LibraryIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Button } from '../ui/button'
 
 export interface FileActionViewProps {
   className?: string
