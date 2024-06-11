@@ -1,5 +1,8 @@
+'use client'
+
 import * as React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Keyboard } from 'lucide-react'
 import {
   NavigationMenu,
@@ -38,13 +41,36 @@ const ListItem = React.forwardRef<
 })
 ListItem.displayName = 'ListItem'
 
+interface NavBarLinkProps extends React.PropsWithChildren {
+  className?: string
+  href: string
+}
+
+const NavBarLink = ({ className, href, children }: NavBarLinkProps) => {
+  const pathname = usePathname()
+  return (
+    <Link href={href} legacyBehavior passHref>
+      <NavigationMenuLink
+        className={cn(
+          navigationMenuTriggerStyle(),
+          'hover:text-foreground/80',
+          pathname.startsWith(href) ? 'text-foreground' : 'text-foreground/60',
+          className
+        )}
+      >
+        {children}
+      </NavigationMenuLink>
+    </Link>
+  )
+}
+
 export default function Navigation() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-foreground/60">
-            Getting Started
+            Products
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -63,35 +89,35 @@ export default function Navigation() {
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
-                Learn more about keyboards & the design process.
-              </ListItem>
-              <ListItem href="/docs" title="Editor Tools">
+              <ListItem title="Editor">
                 Tools provided to help the keyboard design process.
               </ListItem>
-              <ListItem href="/docs" title="Resources">
-                Resources to take your designed keyboard into production.
+              <ListItem title="Preview">
+                Tools provided to help the keyboard design process.
+              </ListItem>
+              <ListItem title="Library">
+                Open sourced programming libraries and APIs to use.
+              </ListItem>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem className="text-foreground/60">
+          <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="w-[400px] md:w-[400px] lg:w-[400px] p-4 grid md:grid-cols-1 gap-3 ">
+              <ListItem title="Getting Started">How to get started</ListItem>
+              <ListItem title="Specifications">Measurements</ListItem>
+              <ListItem title="Design to Manufacture">
+                Information about the process.
               </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={cn(navigationMenuTriggerStyle(), 'text-foreground/60')}
-            >
-              Docs
-            </NavigationMenuLink>
-          </Link>
+          <NavBarLink href="/docs">Docs</NavBarLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/editor" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={cn(navigationMenuTriggerStyle(), 'text-foreground/60')}
-            >
-              Editor
-            </NavigationMenuLink>
-          </Link>
+          <NavBarLink href="/editor">Editor</NavBarLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

@@ -1,5 +1,5 @@
-'use client'
-
+import Link from 'next/link'
+import { Github, Hammer } from 'lucide-react'
 import ThemeModeToggle from '@/components/ThemeModeToggle'
 import Navigation from './Navigation'
 
@@ -10,11 +10,19 @@ interface AppHeaderProps {
 export default function AppHeader({ compact = false }: AppHeaderProps) {
   return (
     <header
-      className={`px-4 ${compact ? 'h-14' : 'h-16'} flex border-b border-border/40 content-center`}
+      className={`sticky top-0 z-50 w-full px-4 border-b border-border/40`}
     >
-      <Navigation />
-      <div className="ml-auto flex self-center">
-        <ThemeModeToggle />
+      <div
+        className={`container ${compact ? 'h-14' : 'h-16'} max-w-screen-2xl flex content-center items-center`}
+      >
+        <Link href="/" className="mr-4 flex space-x-2">
+          <Hammer className="stroke-1" />
+          <span className="hidden sm:inline-block font-bold">keybits/ui</span>
+        </Link>
+        <Navigation />
+        <div className="ml-auto flex self-center">
+          <ThemeModeToggle />
+        </div>
       </div>
     </header>
   )
