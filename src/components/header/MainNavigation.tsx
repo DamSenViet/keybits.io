@@ -64,7 +64,7 @@ const NavBarLink = ({ className, href, children }: NavBarLinkProps) => {
   )
 }
 
-export default function Navigation() {
+export default function MainNavigation() {
   return (
     <NavigationMenu>
       <NavigationMenuList>

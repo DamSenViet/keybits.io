@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { Github, Hammer } from 'lucide-react'
 import ThemeModeToggle from '@/components/ThemeModeToggle'
-import Navigation from './Navigation'
+import MainNavigation from './MainNavigation'
+import MobileNavigation from './MobileNavigation'
 
 interface AppHeaderProps {
   compact?: boolean
@@ -19,7 +20,8 @@ export default function AppHeader({ compact = false }: AppHeaderProps) {
           <Hammer className="stroke-1" />
           <span className="hidden sm:inline-block font-bold">keybits/ui</span>
         </Link>
-        <Navigation />
+        <MainNavigation />
+        <MobileNavigation />
         <div className="ml-auto flex self-center">
           <ThemeModeToggle />
         </div>
