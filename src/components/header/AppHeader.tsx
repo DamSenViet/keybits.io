@@ -4,15 +4,13 @@ import ThemeModeToggle from '@/components/ThemeModeToggle'
 import MainNavigation from './MainNavigation'
 import MobileNavigation from './MobileNavigation'
 
-interface AppHeaderProps {
-  compact?: boolean
-}
+interface AppHeaderProps {}
 
-export default function AppHeader({ compact = false }: AppHeaderProps) {
+export default function AppHeader(_props: AppHeaderProps) {
   return (
     <header className={`sticky top-0 z-50 w-full border-b border-border/40`}>
       <div
-        className={`container ${compact ? 'h-14' : 'h-16'} max-w-screen-2xl flex content-center items-center px-4 sm:px-6`}
+        className={`container h-16 max-w-screen-2xl flex content-center items-center px-4 sm:px-6`}
       >
         <Link href="/" className="mr-4 flex space-x-2">
           <Hammer className="stroke-1" />
