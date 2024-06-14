@@ -26,7 +26,11 @@ function ThemeModeToggle() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button aria-label="Change theme mode" variant={'outline'}>
+        <Button
+          aria-label="Change theme mode"
+          variant={'ghost'}
+          className="w-9 px-0"
+        >
           {icon}
         </Button>
       </PopoverTrigger>
