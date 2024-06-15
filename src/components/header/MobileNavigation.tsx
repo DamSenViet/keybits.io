@@ -23,7 +23,11 @@ export default function MobileNavigation() {
     <div>
       <Button variant={'ghost'} className="w-9 px-0" onClick={handleToggleMenu}>
         <Menu
-          className={cn('transition-transform ', on ? 'rotate-90' : 'rotate-0')}
+          className={cn(
+            'stroke-1',
+            'transition-transform ',
+            on ? 'rotate-90' : 'rotate-0'
+          )}
         />
       </Button>
       <div
