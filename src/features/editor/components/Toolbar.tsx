@@ -26,7 +26,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
         {/* titlebar actions */}
         <MenubarMenu>
           <MenubarTrigger className="h-12 rounded-none ">
-            <Hammer className="stroke-1" />
+            <Hammer className="w-4" />
           </MenubarTrigger>
           <MenubarContent>
             <MenubarSub>
@@ -74,8 +74,8 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
                   Zoom to fit <MenubarShortcut>⇧1</MenubarShortcut>
                 </MenubarItem>
                 <MenubarItem inset>
-                  Zoom to selection{' '}
-                  <MenubarShortcut className="ml-4">⇧2</MenubarShortcut>
+                  Zoom to selection
+                  <MenubarShortcut className="ml-8">⇧2</MenubarShortcut>
                 </MenubarItem>
               </MenubarSubContent>
             </MenubarSub>
@@ -84,11 +84,11 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
               <MenubarSubContent>
                 <MenubarItem>
                   Select All
-                  <MenubarShortcut className="ml-4">⌘A</MenubarShortcut>
+                  <MenubarShortcut>⌘A</MenubarShortcut>
                 </MenubarItem>
                 <MenubarItem>
                   Deselect All
-                  <MenubarShortcut className="ml-4">⇧⌘A</MenubarShortcut>
+                  <MenubarShortcut className="ml-8">⇧⌘A</MenubarShortcut>
                 </MenubarItem>
               </MenubarSubContent>
             </MenubarSub>
@@ -96,21 +96,21 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
             <MenubarItem>Settings</MenubarItem>
             <MenubarItem>Help</MenubarItem>
             <MenubarSeparator />
-            <MenubarItem>Back to home page</MenubarItem>
+            <MenubarItem>Back to home</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
 
         {/* select tool actions */}
         <MenubarMenu>
           <MenubarTrigger className="h-12 rounded-none">
-            <MousePointer2 className="stroke-1" />
+            <MousePointer2 className="w-4" />
           </MenubarTrigger>
         </MenubarMenu>
 
         {/* create item actions */}
         <MenubarMenu>
           <MenubarTrigger className="h-12 rounded-none">
-            <Square className="stroke-1 stroke-white" />
+            <Square className="w-4" />
           </MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
@@ -124,7 +124,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
         {/* panning tool */}
         <MenubarMenu>
           <MenubarTrigger className="h-12 rounded-none">
-            <Hand className="stroke-1 stroke-white" />
+            <Hand className="w-4" />
           </MenubarTrigger>
         </MenubarMenu>
       </Menubar>
