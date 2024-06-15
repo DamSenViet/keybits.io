@@ -1,6 +1,7 @@
 'use client'
 
-import { useToggle } from '@uidotdev/usehooks'
+import Link from 'next/link'
+import { useToggle, useLockBodyScroll } from '@uidotdev/usehooks'
 import { Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -10,6 +11,132 @@ import {
   AccordionTrigger,
 } from '../ui/accordion'
 import { Button } from '../ui/button'
+
+type NavItem = {
+  title: string
+  href: string
+}
+type NavItemGroupItem = {
+  title: string
+  description: string
+  href: string
+}
+type NavItemGroup = {
+  title: string
+  items: NavItemGroupItem[]
+}
+
+type MobileNavNode = NavItemGroup | NavItem
+
+const MobileNavMenuItem = ({ title, href }: NavItem) => {
+  return (
+    <Link
+      className="px-2 py-4 flex flex-1 items-center justify-between font-medium hover:no-underline"
+      href={href}
+    >
+      {title}
+    </Link>
+  )
+}
+
+const MobileNavMenuItemGroupItem = ({
+  title,
+  description,
+  href,
+}: NavItemGroupItem) => {
+  return (
+    <li className="p-2">
+      <Link className="" href={href}>
+        <div className="font-medium">{title}</div>
+        <p className="text-muted-foreground">{description}</p>
+      </Link>
+    </li>
+  )
+}
+
+const MobileNavMenuItemGroup = ({ title, items }: NavItemGroup) => {
+  return (
+    <AccordionItem value={title} className="border-none">
+      <AccordionTrigger className="hover:no-underline px-2">
+        {title}
+      </AccordionTrigger>
+      <AccordionContent>
+        <ul className="ml-2 pl-4 border-l border-border">
+          {items.map((item) => (
+            <MobileNavMenuItemGroupItem {...item} />
+          ))}
+        </ul>
+      </AccordionContent>
+    </AccordionItem>
+  )
+}
+
+interface MobileNavMenuProps {
+  nodes: MobileNavNode[]
+}
+
+const MobileNavMenu = ({ nodes }: MobileNavMenuProps) => {
+  useLockBodyScroll()
+
+  return (
+    <nav className={cn('absolute w-full top-16 left-0 px-4')}>
+      <Accordion type="single" collapsible>
+        {nodes.map((node) => {
+          if ('items' in node)
+            return <MobileNavMenuItemGroup {...node}></MobileNavMenuItemGroup>
+          else return <MobileNavMenuItem {...node}></MobileNavMenuItem>
+        })}
+      </Accordion>
+    </nav>
+  )
+}
+
+const nav: MobileNavNode[] = [
+  {
+    title: 'Products',
+    items: [
+      {
+        title: 'Editor',
+        description: 'Tools provided to help the kebyoard design process',
+        href: '/editor',
+      },
+      {
+        title: 'Preview',
+        description: 'Tools provided to help the kebyoard design process',
+        href: '',
+      },
+      {
+        title: 'Library',
+        description: 'Open sourced programming libraries and APIs to use.',
+        href: '',
+      },
+    ],
+  },
+  {
+    title: 'Resources',
+    items: [
+      {
+        title: 'Getting Started',
+        description: 'How to get started',
+        href: '',
+      },
+      {
+        title: 'Specifications',
+        description: 'Measurements',
+        href: '',
+      },
+      {
+        title: 'Design to Manufacture',
+        description: 'Information about the process',
+        href: '',
+      },
+    ],
+  },
+  {
+    title: 'Editor',
+    href: '/editor',
+  },
+]
 
 export default function MobileNavigation() {
   // right handed hamburger
@@ -30,27 +157,7 @@ export default function MobileNavigation() {
           )}
         />
       </Button>
-      <div
-        className={cn(
-          on ? 'block' : 'hidden',
-          'absolute w-full top-16 left-0 px-4'
-        )}
-      >
-        <Accordion type="single" collapsible className="">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>title</AccordionTrigger>
-            <AccordionContent>stuff</AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>title</AccordionTrigger>
-            <AccordionContent>stuff</AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>title</AccordionTrigger>
-            <AccordionContent>stuff</AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
+      {on && <MobileNavMenu nodes={nav} />}
     </div>
   )
 }
