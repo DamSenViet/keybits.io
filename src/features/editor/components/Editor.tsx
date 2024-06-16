@@ -2,9 +2,8 @@
 
 import { forwardRef, useState } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import CenterPanel from './CenterPanel'
-import LeftPanel from './LeftPanel'
-import RightPanel from './RightPanel'
+import ExplorerSection from './ExplorerSection'
+import GraphSection from './GraphSection'
 import Toolbar from './Toolbar'
 import { ClusterDetails, KeyDetails, KeyboardDetails } from './details'
 
@@ -31,19 +30,22 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
           direction="horizontal"
           style={{ height: undefined, width: undefined }}
         >
+          {/* left panel */}
           <Panel
             className="flex flex-col overflow-hidden"
             defaultSize={20}
             minSize={15}
             maxSize={40}
           >
-            <LeftPanel />
+            <ExplorerSection />
           </Panel>
-          <PanelResizeHandle className="w-1 border-r border-border rounded-full data-[resize-handle-state=hover]:bg-orange-500/50 data-[resize-handle-state=drag]:bg-orange-500/50" />
+          <PanelResizeHandle className="w-px border-r border-border rounded-full data-[resize-handle-state=hover]:bg-border/50 data-[resize-handle-state=drag]:bg-border/50" />
+          {/* center panel */}
           <Panel defaultSize={80}>
-            <CenterPanel />
+            <GraphSection />
           </Panel>
         </PanelGroup>
+        {/* right panel (not resizable) */}
         <div className="w-64 border-l border-border">{detailsSection}</div>
       </div>
     </>

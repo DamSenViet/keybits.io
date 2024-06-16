@@ -1,8 +1,8 @@
 import { forwardRef } from 'react'
 
-export interface CenterPanelProps {}
+export interface GraphSectionProps {}
 
-const CenterPanel = forwardRef<HTMLDivElement, CenterPanelProps>(
+const GraphSection = forwardRef<HTMLDivElement, GraphSectionProps>(
   function (_props, ref) {
     return (
       // rulers...
@@ -16,14 +16,14 @@ const CenterPanel = forwardRef<HTMLDivElement, CenterPanelProps>(
                 y1="0"
                 x2="0"
                 y2="100%"
-                className="stroke-muted-foreground/20"
+                className="stroke-muted-foreground/15"
               />
               <line
                 x1="0"
                 y1="0"
                 x2="100%"
                 y2="0"
-                className="stroke-muted-foreground/20"
+                className="stroke-muted-foreground/15"
               ></line>
             </pattern>
             {/* aggregte both grid lines into one pattern */}
@@ -62,4 +62,4 @@ const CenterPanel = forwardRef<HTMLDivElement, CenterPanelProps>(
   }
 )
 
-export default CenterPanel
+export default GraphSection
