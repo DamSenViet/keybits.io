@@ -25,25 +25,21 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
   return (
     <>
       <Toolbar />
-      <div className="grow h-full flex flex-row">
+      <div className="grow relative h-full flex flex-row items-stretch content-stretch">
         <PanelGroup
           className="grow"
           direction="horizontal"
-          style={{
-            /** Unset default dimensions */
-            height: undefined,
-            width: undefined,
-          }}
+          style={{ height: undefined, width: undefined }}
         >
           <Panel
-            className="flex flex-col"
+            className="flex flex-col overflow-hidden"
             defaultSize={20}
             minSize={15}
             maxSize={40}
           >
             <LeftPanel />
           </Panel>
-          <PanelResizeHandle className="w-2 border-l border-border" />
+          <PanelResizeHandle className="w-1 border-r border-border rounded-full data-[resize-handle-state=hover]:bg-orange-500/50 data-[resize-handle-state=drag]:bg-orange-500/50" />
           <Panel defaultSize={80}>
             <CenterPanel />
           </Panel>
