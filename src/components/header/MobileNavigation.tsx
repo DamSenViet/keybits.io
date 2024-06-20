@@ -63,7 +63,7 @@ const MobileNavMenuItemGroup = ({ title, items }: NavItemGroup) => {
       <AccordionContent>
         <ul className="ml-2 pl-4 border-l border-border">
           {items.map((item) => (
-            <MobileNavMenuItemGroupItem {...item} />
+            <MobileNavMenuItemGroupItem key={item.title} {...item} />
           ))}
         </ul>
       </AccordionContent>
@@ -83,8 +83,16 @@ const MobileNavMenu = ({ nodes }: MobileNavMenuProps) => {
       <Accordion type="single" collapsible>
         {nodes.map((node) => {
           if ('items' in node)
-            return <MobileNavMenuItemGroup {...node}></MobileNavMenuItemGroup>
-          else return <MobileNavMenuItem {...node}></MobileNavMenuItem>
+            return (
+              <MobileNavMenuItemGroup
+                key={node.title}
+                {...node}
+              ></MobileNavMenuItemGroup>
+            )
+          else
+            return (
+              <MobileNavMenuItem key={node.title} {...node}></MobileNavMenuItem>
+            )
         })}
       </Accordion>
     </nav>
