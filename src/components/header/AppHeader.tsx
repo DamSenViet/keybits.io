@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Github, Hammer } from 'lucide-react'
+import { Hammer } from 'lucide-react'
 import ThemeModeToggle from '@/components/ThemeModeToggle'
 import MainNavigation from './MainNavigation'
 import MobileNavigation from './MobileNavigation'
@@ -10,7 +10,7 @@ export default function AppHeader(_props: AppHeaderProps) {
   return (
     <header className={`sticky top-0 z-50 w-full border-b border-border/40`}>
       <div
-        className={`container h-16 max-w-screen-2xl flex content-center items-center px-4 sm:px-6`}
+        className={`container h-14 max-w-screen-2xl flex content-center items-center px-4 sm:px-6`}
       >
         <Link href="/" className="mr-4 flex space-x-2">
           <Hammer className="stroke-1" />

@@ -20,7 +20,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
   return (
     <div
       ref={ref}
-      className="h-12 border-b border-border flex justify-start items-center"
+      className="h-14 border-b border-border flex justify-start items-center"
     >
       <Menubar className="border-none rounded-none p-0 space-x-0">
         {/* titlebar actions */}

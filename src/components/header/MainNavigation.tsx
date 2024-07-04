@@ -3,7 +3,6 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Keyboard } from 'lucide-react'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -53,6 +52,7 @@ const NavBarLink = ({ className, href, children }: NavBarLinkProps) => {
       <NavigationMenuLink
         className={cn(
           navigationMenuTriggerStyle(),
+          'px-2 py-1 h-8',
           'hover:text-foreground/80',
           pathname.startsWith(href) ? 'text-foreground' : 'text-foreground/60',
           className
@@ -68,43 +68,28 @@ export default function MainNavigation() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-foreground/60">
+        <NavigationMenuItem className="text-foreground/60">
+          <NavigationMenuTrigger className="px-2 py-1 h-8">
             Products
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
-                  >
-                    <Keyboard className="h-8" />
-                    <div className="mb-2 mt-4 text-lg font-medium">keybits</div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed keyboard layouts to help prototype
-                      manufacturing. Accessible. Customizable. Open Source.
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <ListItem title="Editor">
-                Tools provided to help the keyboard design process.
+            <ul className="w-[400px] p-6 grid gap-3">
+              <ListItem title="Editor" href="/editor">
+                Keyboard layout prototyping tool.
               </ListItem>
-              <ListItem title="Preview">
-                Tools provided to help the keyboard design process.
-              </ListItem>
+              {/* <ListItem title="Preview">Preview</ListItem> */}
               <ListItem title="Library">
-                Open sourced programming libraries and APIs to use.
+                Open sourced programming libraries.
               </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem className="text-foreground/60">
-          <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="px-2 py-1 h-8">
+            Resources
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="w-[400px] md:w-[400px] lg:w-[400px] p-4 grid md:grid-cols-1 gap-3 ">
+            <ul className="w-[400px] p-6 grid md:grid-cols-1 gap-3 ">
               <ListItem title="Getting Started">How to get started</ListItem>
               <ListItem title="Specifications">Measurements</ListItem>
               <ListItem title="Design to Manufacture">
@@ -114,10 +99,10 @@ export default function MainNavigation() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavBarLink href="/docs">Docs</NavBarLink>
+          <NavBarLink href="/About">About</NavBarLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavBarLink href="/editor">Editor</NavBarLink>
+          <NavBarLink href="/blog">Blog</NavBarLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
