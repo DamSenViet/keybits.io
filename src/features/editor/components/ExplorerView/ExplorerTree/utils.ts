@@ -63,12 +63,12 @@ export function getProjectedDrop<TItem>({
   // if we're allowed to nest, add 1 more to the possible previous depth
   const canHaveChildren = Boolean(prevItem && getChildren(prevItem))
   const addPossPrevDepth = canHaveChildren ? 1 : 0
-  const prevDepth = prevItem ? getDepth(prevItem) + addPossPrevDepth : 0
+  const prevDepth = prevItem ? getDepth(prevItem) : 0
   const nextDepth = nextItem ? getDepth(nextItem) : 0
   const depth = clamp(
     projectedDepth,
     Math.min(prevDepth, nextDepth),
-    Math.max(prevDepth, nextDepth)
+    Math.max(prevDepth + addPossPrevDepth, nextDepth)
   )
 
   function getParentId() {
