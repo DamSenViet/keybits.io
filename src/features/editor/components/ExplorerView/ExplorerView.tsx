@@ -113,15 +113,15 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
       setSearch(event.currentTarget.value)
 
     return (
-      <div ref={ref} className={cn('flex-grow', className)}>
+      <div ref={ref} className={cn('flex-grow flex flex-col', className)}>
         <Input
-          className="mb-6 text-xs mx-0"
+          className="mb-2 text-xs mx-0"
           placeholder="Search"
           onInput={handleSearch}
           value={search}
         />
         <Tree
-          className="relative"
+          className="relative mt-2 mb-2"
           items={root.children!}
           expandedIds={expandedIds}
           onExpandedIdsChange={setExpandedIds}
