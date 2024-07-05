@@ -1,4 +1,5 @@
-import { forwardRef } from 'react'
+import { forwardRef, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Hammer, Hand, MousePointer2, Square, ZoomInIcon } from 'lucide-react'
 import {
   Menubar,
@@ -17,6 +18,8 @@ import {
 export interface ToolbarProps {}
 
 const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
+  const router = useRouter()
+  const routeToHome = useCallback(() => router.push('/'), [])
   return (
     <div
       ref={ref}
@@ -96,7 +99,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function (props, ref) {
             <MenubarItem>Settings</MenubarItem>
             <MenubarItem>Help</MenubarItem>
             <MenubarSeparator />
-            <MenubarItem>Back to home</MenubarItem>
+            <MenubarItem onClick={routeToHome}>Back to home</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
 
