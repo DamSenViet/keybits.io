@@ -111,8 +111,6 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
   const handleDragOverMove = useCallback(
     ({ active, over }: DragMoveEvent) => {
       if (over) {
-        // todo: prevent drops into cannot drop into descendants or self
-        // is insertPosition always stale on switch...
         const dropPosition = getDropPosition(active, over)
         const projectedDrop = getProjectedDrop({
           flatItems: contextValue.visibleFlatItems,
@@ -129,10 +127,12 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
           getChildren: (item) =>
             contextValue.idToChildren.get(contextValue.getId(item)),
         })
-        setHoverDrop({
-          dropPosition,
-          projectedDrop,
-        })
+        if (projectedDrop)
+          setHoverDrop({
+            dropPosition,
+            projectedDrop,
+          })
+        else setHoverDrop(null)
       } else {
         setHoverDrop(null)
       }

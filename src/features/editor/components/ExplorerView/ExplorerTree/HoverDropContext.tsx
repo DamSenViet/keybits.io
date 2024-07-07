@@ -4,7 +4,7 @@ import { getProjectedDrop } from './utils'
 
 export interface HoverDropContextValue {
   dropPosition: DropPosition
-  projectedDrop: ReturnType<typeof getProjectedDrop>
+  projectedDrop: NonNullable<ReturnType<typeof getProjectedDrop>>
 }
 
 const ProjectDropContext = createContext<HoverDropContextValue | null>(null)

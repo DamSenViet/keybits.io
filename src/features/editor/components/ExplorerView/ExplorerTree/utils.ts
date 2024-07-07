@@ -1,8 +1,7 @@
 import { Key } from 'react'
 import { Active, Over } from '@dnd-kit/core'
-import { arrayMove } from '@dnd-kit/sortable'
 import { Coordinates } from '@dnd-kit/utilities'
-import { clamp } from 'lodash'
+import { clamp, isUndefined } from 'lodash'
 import { DropPosition } from './types/projection'
 
 export function getDropPosition(active: Active, over: Over): DropPosition {
@@ -16,6 +15,9 @@ export function getDropPosition(active: Active, over: Over): DropPosition {
 
 /**
  * Calculates projected drop depth & target parent for the drop operation.
+ * @param args
+ * @param args.flatItems Level order representation of the tree
+ * @returns A representation of the projected drop operation or null if the drop is not valid.
  */
 export function getProjectedDrop<TItem>({
   flatItems,
@@ -40,20 +42,26 @@ export function getProjectedDrop<TItem>({
   getParent: (item: TItem) => TItem | undefined
   getChildren: (item: TItem) => TItem[] | undefined
 }) {
+  function isAncestor(item: TItem | undefined, ancestor: TItem | undefined) {
+    if (isUndefined(item)) return false
+    let parent = getParent(item)
+    while (!isUndefined(parent)) {
+      if (parent === ancestor) return true
+      parent = getParent(parent)
+    }
+    return false
+  }
+
   const activeIndex = flatItems.findIndex((item) => getId(item) === activeId)
   const overIndex = flatItems.findIndex((item) => getId(item) === overId)
-  const insertIndex =
-    activeIndex === overIndex
-      ? overIndex
-      : dropPosition === 'before'
-        ? overIndex - Number(activeIndex < overIndex)
-        : overIndex + Number(activeIndex > overIndex)
+  // index at which we'll push all other item from this position forward
+  // acts as our marker for depth compute & divider
+  const insertIndex = dropPosition === 'after' ? overIndex + 1 : overIndex
+  const activeItem = flatItems[activeIndex]
 
-  const newItems = arrayMove(flatItems, activeIndex, insertIndex)
-  const newActiveIndex = newItems.findIndex((item) => getId(item) === activeId)
-  const activeItem = newItems[newActiveIndex]
-  const prevItem = newItems[newActiveIndex - 1]
-  const nextItem = newItems[newActiveIndex + 1]
+  const prevItem = flatItems[insertIndex - 1]
+  const nextItem = flatItems[insertIndex]
+
   const dragDepth = Math.floor(offset / indentationWidth)
   // we use a projected depth so that we can carry on the current depth
   // as we drag the item around, makes for more intuitive vertical dragging
@@ -61,32 +69,42 @@ export function getProjectedDrop<TItem>({
 
   // compute possible depth by comparing the simulated previous and next items
   // if we're allowed to nest, add 1 more to the possible previous depth
-  const canHaveChildren = Boolean(prevItem && getChildren(prevItem))
-  const addPossPrevDepth = canHaveChildren ? 1 : 0
-  const prevDepth = prevItem ? getDepth(prevItem) : 0
+  const canPrevHaveChildren = Boolean(prevItem && getChildren(prevItem))
+  const addPossPrevDepth = canPrevHaveChildren ? 1 : 0
+  const prevDepth = prevItem ? getDepth(prevItem) + addPossPrevDepth : 0
   const nextDepth = nextItem ? getDepth(nextItem) : 0
-  const depth = clamp(
-    projectedDepth,
-    Math.min(prevDepth, nextDepth),
-    Math.max(prevDepth + addPossPrevDepth, nextDepth)
-  )
 
-  function getParentId() {
+  const minDepth = nextDepth
+  const maxDepth = prevDepth
+  let depth = clamp(projectedDepth, minDepth, maxDepth)
+
+  // special case to make the indicator more intuitive
+  if (isAncestor(prevItem, activeItem) && !isAncestor(nextItem, activeItem)) {
+    depth = getDepth(activeItem)
+  }
+
+  function getProjectedParent() {
     if (depth === 0 || !prevItem) return undefined
-    if (depth === getDepth(prevItem)) return getId(getParent(prevItem)!)
-    if (depth > getDepth(prevItem)) return getId(prevItem)
+    if (depth === getDepth(prevItem)) return getParent(prevItem)
+    if (depth > getDepth(prevItem)) return prevItem
     // find the parent of our active item in the new position by looking behind
     // array using the active item as the divider
-    const newParent = newItems
-      .slice(0, newActiveIndex)
+    const newParent = flatItems
+      .slice(0, insertIndex)
       .reverse()
       .find((item) => getDepth(item) === depth - 1)
-    return newParent ? getId(newParent) : undefined
+    return newParent
   }
+
+  const parentItem = getProjectedParent()
+  const parentId = parentItem ? getId(parentItem) : undefined
+
+  // invalid drop: projected parent can't be descendant of the active item
+  if (parentId === activeId || isAncestor(parentItem, activeItem)) return null
 
   return {
     depth,
-    parentId: getParentId(),
+    parentId,
   }
 }
 
