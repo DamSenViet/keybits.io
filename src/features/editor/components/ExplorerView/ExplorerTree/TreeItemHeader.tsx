@@ -99,7 +99,7 @@ export default function TreeItemHeader({
       >
         <ChevronDown
           className={cn(
-            'h-4 w-4 stroke-muted-foreground transition-transform duration-200 -rotate-90',
+            'h-3 w-3 stroke-muted-foreground transition-transform duration-200 -rotate-90',
             isExpanded ? 'rotate-0' : null
           )}
         />

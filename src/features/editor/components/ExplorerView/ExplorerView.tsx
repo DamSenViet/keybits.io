@@ -1,15 +1,7 @@
 'use client'
 
-import {
-  FormEventHandler,
-  useState,
-  forwardRef,
-  useMemo,
-  useCallback,
-  Key,
-} from 'react'
+import { useState, forwardRef, Key } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { ExplorerNode } from './ExplorerTree/ExplorerNode'
 import Tree from './ExplorerTree/Tree'
@@ -94,34 +86,11 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
     const [root, setRoot] = useState(tree)
     const [expandedIds, setExpandedIds] = useState<Key[]>([])
     const [selectedIds, setSelectedIds] = useState<Key[]>([])
-    const [search, setSearch] = useState('')
-
-    const searchPredicate = useCallback(
-      (node: ExplorerNode) =>
-        search === ''
-          ? true
-          : node.name.toLowerCase().indexOf(search.toLowerCase()) > -1,
-      [search]
-    )
-
-    const filteredTree = useMemo(
-      () => filterTree([root] ?? [], searchPredicate),
-      [root, searchPredicate]
-    )
-
-    const handleSearch: FormEventHandler<HTMLInputElement> = (event) =>
-      setSearch(event.currentTarget.value)
 
     return (
       <div ref={ref} className={cn('flex-grow flex flex-col', className)}>
-        <Input
-          className="mb-2 text-xs mx-0"
-          placeholder="Search"
-          onInput={handleSearch}
-          value={search}
-        />
         <Tree
-          className="relative mt-2 mb-2"
+          className="relative flex-grow"
           items={root.children!}
           expandedIds={expandedIds}
           onExpandedIdsChange={setExpandedIds}

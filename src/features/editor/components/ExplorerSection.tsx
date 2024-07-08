@@ -5,7 +5,7 @@ export interface ExplorerSectionProps {}
 const ExplorerSection = function (props: ExplorerSectionProps) {
   return (
     <>
-      <ExplorerView className="px-4 pt-4" />
+      <ExplorerView className="pl-4 py-4" />
     </>
   )
 }
