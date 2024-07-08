@@ -3,6 +3,7 @@
 import { forwardRef, useState } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { Triangle, Share } from 'lucide-react'
+import ThemeModeToggle from '@/components/ThemeModeToggle'
 import { Button } from '@/components/ui/button'
 import ExplorerSection from './ExplorerSection'
 import GraphSection from './GraphSection'
@@ -37,6 +38,7 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
           >
             <Share className="size-3.5" /> Share
           </Button>
+          <ThemeModeToggle className="ml-2" />
         </div>
       </header>
       <main className="grow relative h-full flex flex-row items-stretch content-stretch">

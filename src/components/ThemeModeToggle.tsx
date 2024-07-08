@@ -3,10 +3,15 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 import { Sun, Moon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from './ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
 
-function ThemeModeToggle() {
+export interface ThemeModeToggleProps {
+  className?: string
+}
+
+function ThemeModeToggle({ className }: ThemeModeToggleProps) {
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
 
@@ -28,8 +33,8 @@ function ThemeModeToggle() {
       <PopoverTrigger asChild>
         <Button
           aria-label="Change theme mode"
-          variant={'ghost'}
-          className="w-9 px-0"
+          variant={'outline'}
+          className={cn('size-9 px-0', className)}
         >
           {icon}
         </Button>
