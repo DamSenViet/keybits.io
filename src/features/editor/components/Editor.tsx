@@ -5,9 +5,9 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { Triangle, Share } from 'lucide-react'
 import ThemeModeToggle from '@/components/ThemeModeToggle'
 import { Button } from '@/components/ui/button'
+import EditorLogo from './EditorLogo'
 import ExplorerSection from './ExplorerSection'
 import GraphSection from './GraphSection'
-import Toolbar from './Toolbar'
 import { ClusterDetails, KeyDetails, KeyboardDetails } from './details'
 
 export interface EditorProps {}
@@ -25,9 +25,10 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
     <>
       <header className="flex flex-row h-[54px] border-b border-border items-center">
         <div className="w-[52px] border-r border-border self-stretch flex justify-center items-center">
-          <div className="h-9 w-9 p-1 border border-border rounded-md flex justify-center items-center">
+          <EditorLogo />
+          {/* <div className="h-9 w-9 p-1 border border-border rounded-md flex justify-center items-center">
             <Triangle className="fill-foreground" strokeWidth={1} />
-          </div>
+          </div> */}
         </div>
         <div className="grow flex justify-between items-center px-4">
           <h1 className="text-xl font-semibold align-middle">Editor</h1>
