@@ -2,6 +2,8 @@
 
 import { useState, forwardRef, Key } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
+import { Ellipsis } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ExplorerNode } from './ExplorerTree/ExplorerNode'
 import Tree from './ExplorerTree/Tree'
@@ -89,6 +91,12 @@ const ExplorerView = forwardRef<HTMLDivElement, ExplorerViewProps>(
 
     return (
       <div ref={ref} className={cn('flex-grow flex flex-col', className)}>
+        <div className="flex justify-between items-center mb-1">
+          <div className="text-xs">Explorer</div>
+          <Button variant="ghost" className="h-6 w-6 p-0 rounded-full">
+            <Ellipsis size={16} />
+          </Button>
+        </div>
         <Tree
           className="relative flex-grow"
           items={root.children!}

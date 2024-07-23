@@ -42,7 +42,7 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
           <ThemeModeToggle className="ml-2" />
         </div>
       </header>
-      <main className="grow relative h-full flex flex-row items-stretch content-stretch">
+      <main className="grow relative h-[calc(100vh-3.5rem)] flex flex-row overflow-hidden">
         {/* primary content */}
         <PanelGroup
           className="grow"
@@ -66,7 +66,7 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
         </PanelGroup>
         {/* right panel */}
         <div className="hidden w-64 pr-4 py-4 lg:flex flex-col">
-          {detailsSection}
+          {/* {detailsSection} */}
         </div>
       </main>
       {/* <Toolbar /> */}
