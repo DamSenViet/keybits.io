@@ -23,7 +23,7 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
 
   return (
     <>
-      <header className="flex flex-row h-[54px] border-b border-border items-center">
+      <header className="flex flex-row h-14 border-b border-border items-center">
         <div className="w-[52px] border-r border-border self-stretch flex justify-center items-center">
           <EditorLogo />
           {/* <div className="h-9 w-9 p-1 border border-border rounded-md flex justify-center items-center">
