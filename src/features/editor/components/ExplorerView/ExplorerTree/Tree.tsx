@@ -178,38 +178,33 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
   )
 
   return (
-    <fieldset
-      className={cn('rounded-lg border px-4 py-4 border-border', className)}
-    >
-      <legend className="-ml-1 px-1 text-sm font-medium">Keyboard</legend>
-      <TreeContext.Provider value={contextValue}>
-        <DndContext
-          id={dndId}
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOverMove}
-          onDragMove={handleDragOverMove}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-        >
-          <HoverDropContext.Provider value={hoverDrop}>
-            <ul
-              ref={ref}
-              className={cn(
-                'flex-grow rounded-md',
-                isUndefined(hoverDrop && hoverDrop.projectedDrop.parentId)
-                  ? 'bg-muted'
-                  : null
-              )}
-              {...rootAttributes}
-            >
-              {childItems}
-            </ul>
-            <DraggableOverlay item={activeItem} />
-          </HoverDropContext.Provider>
-        </DndContext>
-      </TreeContext.Provider>
-    </fieldset>
+    <TreeContext.Provider value={contextValue}>
+      <DndContext
+        id={dndId}
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOverMove}
+        onDragMove={handleDragOverMove}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <HoverDropContext.Provider value={hoverDrop}>
+          <ul
+            ref={ref}
+            className={cn(
+              'flex-grow rounded-md',
+              isUndefined(hoverDrop && hoverDrop.projectedDrop.parentId)
+                ? 'bg-muted'
+                : null
+            )}
+            {...rootAttributes}
+          >
+            {childItems}
+          </ul>
+          <DraggableOverlay item={activeItem} />
+        </HoverDropContext.Provider>
+      </DndContext>
+    </TreeContext.Provider>
   )
 })
 

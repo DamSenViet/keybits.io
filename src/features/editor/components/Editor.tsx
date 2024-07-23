@@ -66,10 +66,7 @@ const Editor = forwardRef<HTMLDivElement, EditorProps>(function (props, ref) {
         </PanelGroup>
         {/* right panel */}
         <div className="hidden w-64 pr-4 py-4 lg:flex flex-col">
-          <fieldset className="grow rounded-lg border px-4 border-border">
-            <legend className="-ml-1 px-1 text-sm font-medium">Details</legend>
-            {detailsSection}
-          </fieldset>
+          {detailsSection}
         </div>
       </main>
       {/* <Toolbar /> */}
