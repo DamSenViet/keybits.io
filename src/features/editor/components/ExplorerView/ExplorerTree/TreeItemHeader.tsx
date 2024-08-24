@@ -1,7 +1,8 @@
-import { PointerEvent, useContext } from 'react'
+import { Key, PointerEvent, useContext } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
 import { mergeRefs } from '@mantine/hooks'
+import { uniq, without } from 'lodash'
 import { ChevronDown, File, Folder, FolderOpen } from 'lucide-react'
 import { useTreeItem } from '@/components/headless-ui/tree'
 import { cn } from '@/lib/utils'
@@ -23,13 +24,22 @@ export default function TreeItemHeader({
   showChevron = false,
 }: TreeItemHeaderProps) {
   // determine whether we're expanded
-  const { id, canHaveChildren, depth, isExpanded, toggleExpanded } =
-    useTreeItem(TreeContext, item)
+  const {
+    id,
+    canHaveChildren,
+    depth,
+    isExpanded,
+    toggleExpanded,
+    isSelected,
+    select,
+    deselect,
+  } = useTreeItem(TreeContext, item)
 
   const Icon = canHaveChildren ? (isExpanded ? FolderOpen : Folder) : File
   const resolvedShowChevron = canHaveChildren && showChevron
 
   const {
+    active,
     isDragging,
     attributes,
     listeners,
@@ -60,6 +70,16 @@ export default function TreeItemHeader({
     toggleExpanded()
   }
 
+  // @todo: implement as onPointerClick (need to debounce and test for same element onDown & onUp)
+  const handleSelect = (event: PointerEvent<HTMLDivElement>) => {
+    if (active || isDragging) return
+    // ctrlKey won't trigger on mac (triggers context menu instead)
+    if (event.ctrlKey || event.metaKey) {
+      if (isSelected) deselect(id)
+      else select(id)
+    } else select(id)
+  }
+
   return (
     <div
       ref={mergedRefs}
@@ -69,8 +89,10 @@ export default function TreeItemHeader({
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
         'group',
         className,
-        isDragging ? 'opacity-40' : null
+        isDragging ? 'opacity-40' : null,
+        isSelected ? 'bg-foreground/20' : null
       )}
+      onClick={handleSelect}
       {...attributes}
       {...listeners}
     >

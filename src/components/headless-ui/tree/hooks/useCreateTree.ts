@@ -169,6 +169,7 @@ export default function useCreateTree<TItem>(
     expandedIds: resolvedExpandedIds,
     setExpandedIds: setResolvedExpandedIds,
     uniqExpandedIds: uniqExpandedIds,
+    multiSelectable,
     selectedIds: resolvedSelectedIds,
     setSelectedIds: setResolvedSelectedIds,
     uniqSelectedIds: uniqSelectedIds,

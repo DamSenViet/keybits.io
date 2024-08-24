@@ -1,5 +1,5 @@
-import { useContext, Context, useMemo, useCallback } from 'react'
-import { isUndefined } from 'lodash'
+import { useContext, Context, useMemo, useCallback, Key } from 'react'
+import { isUndefined, without } from 'lodash'
 import { TreeContextValue } from '../types'
 
 export default function useTreeItem<TItem>(
@@ -10,6 +10,9 @@ export default function useTreeItem<TItem>(
     getId,
     setExpandedIds,
     uniqExpandedIds,
+    multiSelectable,
+    selectedIds,
+    setSelectedIds,
     uniqSelectedIds,
     idToParent,
     idToChildren,
@@ -27,6 +30,31 @@ export default function useTreeItem<TItem>(
     setExpandedIds([...copy.values()])
   }, [itemId, uniqExpandedIds, setExpandedIds])
 
+  const isSelected = useMemo(
+    () => uniqSelectedIds.has(itemId),
+    [uniqSelectedIds]
+  )
+
+  const select = useCallback(
+    (id: Key) => {
+      if (isSelected) return
+      if (multiSelectable) setSelectedIds([...selectedIds, id])
+      else setSelectedIds([id])
+      console.log(`selected ${id}`)
+    },
+    [multiSelectable, selectedIds, isSelected]
+  )
+
+  const deselect = useCallback(
+    (id: Key) => {
+      if (!isSelected) return
+      if (multiSelectable) setSelectedIds(without(selectedIds, id))
+      else setSelectedIds([])
+      console.log(`deselected ${id}`)
+    },
+    [multiSelectable, isSelected, selectedIds]
+  )
+
   const shortcuts = useMemo(() => {
     const id = getId(item)
     const children = idToChildren.get(itemId)
@@ -38,7 +66,9 @@ export default function useTreeItem<TItem>(
       id,
       isExpanded: uniqExpandedIds.has(itemId),
       toggleExpanded,
-      isSelected: uniqSelectedIds.has(itemId),
+      isSelected,
+      deselect,
+      select,
       parent: idToParent.get(itemId),
       canHaveChildren,
       children,

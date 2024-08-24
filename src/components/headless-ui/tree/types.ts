@@ -12,6 +12,7 @@ export interface TreeContextValue<TItem> {
   expandedIds: Key[]
   setExpandedIds: (ids: Key[]) => void
   uniqExpandedIds: Set<Key>
+  multiSelectable: boolean
   selectedIds: Key[]
   setSelectedIds: (ids: Key[]) => void
   uniqSelectedIds: Set<Key>

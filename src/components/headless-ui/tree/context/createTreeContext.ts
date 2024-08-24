@@ -11,6 +11,7 @@ export default function createTreeContext<TItem>() {
     expandedIds,
     setExpandedIds: noop,
     uniqExpandedIds: new Set(expandedIds),
+    multiSelectable: false,
     selectedIds,
     setSelectedIds: noop,
     uniqSelectedIds: new Set(selectedIds),

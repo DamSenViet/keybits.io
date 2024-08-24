@@ -74,6 +74,7 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
       filteredItems,
       expandedIds: expandedIds,
       onExpandedIdsChange,
+      multiSelectable: false,
       selectedIds: selectedIds,
       onSelectedIdsChange,
     }
