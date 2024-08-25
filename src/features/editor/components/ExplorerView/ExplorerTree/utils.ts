@@ -108,7 +108,10 @@ export function getProjectedDrop<TItem>({
   }
 }
 
-/** Computes the difference beteween the draggable initial and transform (overlay) */
+/**
+ * Computes the difference beteween the overlay initial position and transform position
+ * Note: DOES NOT care about the active box of the draggable trigger.
+ */
 export function getActiveDelta(active: Active): Coordinates {
   if (active.rect.current.initial && active.rect.current.translated) {
     const diff = {

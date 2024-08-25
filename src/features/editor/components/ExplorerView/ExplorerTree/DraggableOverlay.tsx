@@ -1,34 +1,31 @@
 import { createPortal } from 'react-dom'
-import {
-  DragOverlay,
-  DropAnimation,
-  defaultDropAnimationSideEffects,
-} from '@dnd-kit/core'
+import { DragOverlay } from '@dnd-kit/core'
 import { ExplorerNode } from './ExplorerNode'
-import TreeItemHeader from './TreeItemHeader'
+import { snapOverlayToCursor } from './snapOverlayToCursor'
 
 export interface DraggableOverlayProps {
-  item?: ExplorerNode
+  items?: ExplorerNode[]
 }
 
-const dropAnimation: DropAnimation = {
-  sideEffects: defaultDropAnimationSideEffects({
-    className: {
-      active: 'opacity-40',
-    },
-  }),
-}
-
-export default function DraggableOverlay({ item }: DraggableOverlayProps) {
+export default function DraggableOverlay({ items }: DraggableOverlayProps) {
   return (
     <>
       {createPortal(
-        <DragOverlay dropAnimation={dropAnimation}>
-          {item ? (
-            <TreeItemHeader
-              className="bg-background border-solid border-2 border-blue-400 opacity-50"
-              item={item}
-            />
+        <DragOverlay
+          dropAnimation={null}
+          modifiers={[snapOverlayToCursor]}
+          style={{ width: 'auto', height: 'auto' }}
+        >
+          {items ? (
+            <div className="px-[2px] py-[2px] text-xs text-foreground cursor-grabbing">
+              <div className="px-2 py-1 rounded-md bg-muted-foreground/50 opacity-">
+                {items.length === 1 ? (
+                  <>{items[0].name}</>
+                ) : (
+                  <>{items.length}</>
+                )}
+              </div>
+            </div>
           ) : null}
         </DragOverlay>,
         document.body

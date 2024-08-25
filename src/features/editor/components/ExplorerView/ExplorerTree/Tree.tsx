@@ -19,8 +19,9 @@ import {
   useSensor,
   PointerSensor,
   KeyboardSensor,
+  closestCenter,
 } from '@dnd-kit/core'
-import { isUndefined, noop } from 'lodash'
+import { isUndefined, negate, noop } from 'lodash'
 import { useCreateTree } from '@/components/headless-ui/tree'
 import { find } from '@/components/headless-ui/tree/utils/traversal'
 import { cn } from '@/lib/utils'
@@ -89,6 +90,25 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
   )
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
+
+  const draggedIds = useMemo(() => {
+    if (activeId) {
+      // we're only dragging the entire selection if drag occurs on the selection
+      if (selectedIds.includes(activeId)) return selectedIds
+      // if we attempt to drag one outsidie the selection, we're dragging just that one item
+      else return [activeId]
+    }
+    return []
+  }, [selectedIds, activeId])
+
+  const draggedItems = useMemo(
+    () =>
+      draggedIds
+        .map((id) => contextValue.idToItem.get(id)!)
+        .filter(negate(isUndefined)),
+    [draggedIds, contextValue.idToItem]
+  )
+
   const activeItem = useMemo(
     () =>
       find(
@@ -113,11 +133,12 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
     ({ active, over }: DragMoveEvent) => {
       if (over) {
         const dropPosition = getDropPosition(active, over)
+        const deltaX = getActiveDelta(active).x
         const projectedDrop = getProjectedDrop({
           flatItems: contextValue.visibleFlatItems,
           activeId: active.id,
           overId: over.id,
-          offset: getActiveDelta(active).x,
+          offset: deltaX,
           indentationWidth: TREE_INDENT_PX,
           dropPosition,
           getId: contextValue.getId,
@@ -183,6 +204,7 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
       <DndContext
         id={dndId}
         sensors={sensors}
+        collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragOver={handleDragOverMove}
         onDragMove={handleDragOverMove}
@@ -202,7 +224,7 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
           >
             {childItems}
           </ul>
-          <DraggableOverlay item={activeItem} />
+          <DraggableOverlay items={draggedItems} />
         </HoverDropContext.Provider>
       </DndContext>
     </TreeContext.Provider>

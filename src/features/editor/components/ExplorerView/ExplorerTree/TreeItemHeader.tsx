@@ -89,7 +89,7 @@ export default function TreeItemHeader({
         'text-xs font-normal py-1 rounded-sm flex-nowrap min-w-0 max-w-full',
         'group',
         className,
-        isDragging ? 'opacity-40' : null,
+        // isDragging ? 'opacity-40' : null,
         isSelected ? 'bg-foreground/20' : null
       )}
       onClick={handleSelect}
