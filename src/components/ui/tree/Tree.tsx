@@ -22,7 +22,6 @@ import {
   closestCenter,
 } from '@dnd-kit/core'
 import { isUndefined, negate, noop } from 'lodash'
-import { find } from '@/components/headless-ui/tree/utils/traversal'
 import { cn } from '@/lib/utils'
 import TreeItem from './TreeItem'
 import { TREE_INDENT_PX } from './constants'
@@ -34,6 +33,7 @@ import useCreateTree from './hooks/useCreateTree'
 import { DropEvent } from './types/events'
 import { TreeNode } from './types/ui'
 import { getActiveDelta, getDropPosition, getProjectedDrop } from './utils/dnd'
+import { find } from './utils/traversal'
 
 const DraggableOverlay = dynamic(() => import('./DraggableOverlay'), {
   ssr: false,
