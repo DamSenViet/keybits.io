@@ -89,7 +89,7 @@ export default function TreeItemHeader({
         'group',
         className,
         // isDragging ? 'opacity-40' : null,
-        isSelected ? 'bg-foreground/20' : null
+        isSelected ? 'bg-foreground/10' : null
       )}
       onClick={handleSelect}
       {...attributes}
