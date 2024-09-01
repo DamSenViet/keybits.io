@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { TREE_INDENT_PX, CHEVRON_SPACE, ITEM_ICON_WIDTH } from './constants'
 import { DropPosition } from './types/projection'
@@ -10,6 +10,11 @@ export interface DropIndicatorProps {
 
 const DropIndicator = forwardRef<HTMLDivElement, DropIndicatorProps>(
   ({ position = 'before', depth = 0 }, ref) => {
+    const indent = useMemo(
+      () => depth * TREE_INDENT_PX + CHEVRON_SPACE + ITEM_ICON_WIDTH / 3,
+      [depth]
+    )
+
     return (
       <div
         ref={ref}
@@ -22,18 +27,17 @@ const DropIndicator = forwardRef<HTMLDivElement, DropIndicatorProps>(
             : 'top-0 -translate-y-1/2'
         )}
         style={{
-          paddingLeft:
-            depth * TREE_INDENT_PX + CHEVRON_SPACE + ITEM_ICON_WIDTH / 2,
+          paddingLeft: indent,
         }}
       >
         <div
           className={cn(
-            'h-3 w-3',
+            'h-[8px] w-[8px]',
             'rounded-full bg-white border-solid border-2 border-blue-500',
             'absolute top-1/2 -translate-y-1/2 -translate-x-1/2'
           )}
           style={{
-            left: depth * TREE_INDENT_PX + CHEVRON_SPACE + ITEM_ICON_WIDTH / 2,
+            left: indent,
           }}
         />
         <div className="h-1 w-full  bg-blue-500" />

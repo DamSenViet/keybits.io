@@ -202,7 +202,7 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
           <ul
             ref={ref}
             className={cn(
-              'h-0 flex-grow rounded-md overflow-auto pb-8',
+              'h-0 flex-grow overflow-auto pb-8',
               isUndefined(hoverDrop && hoverDrop.projectedDrop.parentId)
                 ? 'bg-muted'
                 : null
