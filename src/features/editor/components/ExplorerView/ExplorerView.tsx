@@ -4,34 +4,42 @@ import { useState, forwardRef, Key } from 'react'
 import { reduce, ListIterator, List } from 'lodash'
 import { Ellipsis } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { TreeNode } from '@/components/ui/tree'
+import { Tree } from '@/components/ui/tree'
 import { cn } from '@/lib/utils'
-import { ExplorerNode } from './ExplorerTree/ExplorerNode'
-import Tree from './ExplorerTree/Tree'
 
-const tree: ExplorerNode = {
-  name: 'Root',
+const tree: TreeNode = {
+  id: 'Root',
+  label: 'Root',
   children: [
     {
-      name: 'Item A',
+      id: 'Item A',
+      label: 'Item A',
       children: [],
     },
     {
-      name: 'Item B',
+      id: 'Item B',
+      label: 'Item B',
       children: [
         {
-          name: 'Item C',
+          id: 'Item C',
+          label: 'Item C',
         },
         {
-          name: 'Item D',
+          id: 'Item D',
+          label: 'Item D',
           children: [
             {
-              name: 'Item E',
+              id: 'Item E',
+              label: 'Item E',
             },
             {
-              name: 'Item F',
+              id: 'Item F',
+              label: 'Item F',
               children: [
                 {
-                  name: 'Item G',
+                  id: 'Item G',
+                  label: 'Item G',
                 },
               ],
             },
@@ -40,31 +48,35 @@ const tree: ExplorerNode = {
       ],
     },
     {
-      name: 'Item H',
+      id: 'Item H',
+      label: 'Item H',
       children: [],
     },
     {
-      name: 'Item I',
+      id: 'Item I',
+      label: 'Item I',
     },
     {
-      name: 'Item J',
+      id: 'Item J',
+      label: 'Item I',
       children: [],
     },
     {
-      name: 'Item K',
+      id: 'Item K',
+      label: 'Item I',
     },
   ],
 }
 
 const filterTree = (
-  nodes: ExplorerNode[],
-  predicate: ListIterator<ExplorerNode, boolean>
+  nodes: TreeNode[],
+  predicate: ListIterator<TreeNode, boolean>
 ) => {
   const getNodes = (
-    prev: ExplorerNode[],
-    curr: ExplorerNode,
+    prev: TreeNode[],
+    curr: TreeNode,
     index: number,
-    list: List<ExplorerNode>
+    list: List<TreeNode>
   ) => {
     if (predicate(curr, index, list)) {
       prev.push(curr)
