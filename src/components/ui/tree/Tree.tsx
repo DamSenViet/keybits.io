@@ -164,18 +164,25 @@ const Tree = forwardRef<HTMLUListElement, TreeProps>(function (
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
-      if (over && hoverDrop) {
-        onDrop({
+      if (hoverDrop && over) {
+        const activeParentId = contextValue.idToParent.get(active.id)?.id
+        const overParentId = contextValue.idToParent.get(over.id)?.id
+        const dropEvent: DropEvent = {
           activeId: active.id,
-          parentId: hoverDrop.projectedDrop.parentId,
+          activeParentId,
           overId: over.id,
-          position: hoverDrop.dropPosition,
-        })
+          overParentId,
+          dropPosition: hoverDrop.dropPosition,
+          dropParentId: hoverDrop.projectedDrop.parentId,
+          relativeDropId: hoverDrop.projectedDrop.relativeDropId,
+          relativeDropPosition: hoverDrop.projectedDrop.relativeDropPosition,
+        }
+        onDrop(dropEvent)
       }
       setActiveId(null)
       setHoverDrop(null)
     },
-    [setActiveId]
+    [setActiveId, setHoverDrop, onDrop, hoverDrop]
   )
 
   const handleDragCancel = useCallback(

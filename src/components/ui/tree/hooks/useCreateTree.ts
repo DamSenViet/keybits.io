@@ -155,7 +155,7 @@ export default function useCreateTree(
 
   const flatItems = useMemo(
     () => flattenTree(items, getChildren, 'preorder'),
-    items
+    [items]
   )
 
   // helpful for constructing variable depth insert projections
